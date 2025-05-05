@@ -113,22 +113,10 @@ void channel(const bitvec& cw, float esno, fltvec& llr_out) {
     double snr_linear = pow(10.0, esno / 10.0);
     std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
     std::normal_distribution<float> distribution(4.0*snr_linear, std::sqrt(8.0*snr_linear));
-    // std::cout << "esn0 = " << esno << std::endl;
-    // std::cout << "snr_linear = " << snr_linear << std::endl;
     
-    double sigma_sqrd = 1 / (2.0 * snr_linear);
-    // std::cout << "sigma_sqrd" << sigma_sqrd << std::endl;
-    double sigma = sqrt(sigma_sqrd);
-    // std::normal_distribution<float> distribution(0.0, sigma);
-    // std::cout << "sigma" << sigma << std::endl;
     for (size_t i = 0; i < cw.size(); ++i) {
         // BPSK modulation: 0 -> +1, 1 -> -1
-        // float modulated = (cw[i] == 0) ? 1.0f : -1.0f;
         float modulated = (cw[i] == 1) ? 1.0f : -1.0f;
-        // Add Gaussian noise
-        
-        // llr_out[i] = modulated + distribution(generator);
-        // llr_out[i] = modulated;
         llr_out[i] = modulated * distribution(generator);
     }
 }

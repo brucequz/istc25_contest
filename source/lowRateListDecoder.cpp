@@ -15,7 +15,7 @@ LowRateListDecoder::LowRateListDecoder(FeedForwardTrellis feedforwardTrellis, in
 		std::cerr << "[ERROR] INVALID STOPPING RULE" << std::endl;
 	}
 	
-	int v = feedforwardTrellis.getV();
+	// int v = feedforwardTrellis.getV();
 }
 
 MessageInformation LowRateListDecoder::decode(std::vector<float> receivedMessage, std::vector<int> punctured_indices) {
