@@ -9,8 +9,8 @@
 #include <array>
 #include <fstream>
 #include <sstream>
+#include "tbcc.h"
 #include "enc_dec.h"
-#include "ldpc.h"
 #include "argmin.h"
 
 const int N_TEST = 12;
@@ -32,7 +32,7 @@ test_point contest[N_TEST] =
   {128,512,0.1,2000,0},  // k=128 R=1/4
   {256,1024,0.1,2000,0}, // k=256 R=1/4
   {512,2048,0.1,2000,0}, // k=512 R=1/4
-  {64,128,1.0,2000,0},   // k=64 R=1/2
+  {64,128,-0.5,100000,0},   // k=64 R=1/2
   {128,256,1.0,2000,0},  // k=128 R=1/2
   {256,512,1.0,2000,0},  // k=256 R=1/2
   {512,1024,1.0,2000,0}, // k=512 R=1/2
@@ -110,13 +110,25 @@ class decoder_stats : public stats<int,4>
 // Simulate BPSK transmission over an AWGN channel
 void channel(const bitvec& cw, float esno, fltvec& llr_out) {
     llr_out.resize(cw.size());
+    double snr_linear = pow(10.0, esno / 10.0);
     std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
-    std::normal_distribution<float> distribution(4*esno, std::sqrt(8*esno));
-
+    std::normal_distribution<float> distribution(4.0*snr_linear, std::sqrt(8.0*snr_linear));
+    // std::cout << "esn0 = " << esno << std::endl;
+    // std::cout << "snr_linear = " << snr_linear << std::endl;
+    
+    double sigma_sqrd = 1 / (2.0 * snr_linear);
+    // std::cout << "sigma_sqrd" << sigma_sqrd << std::endl;
+    double sigma = sqrt(sigma_sqrd);
+    // std::normal_distribution<float> distribution(0.0, sigma);
+    // std::cout << "sigma" << sigma << std::endl;
     for (size_t i = 0; i < cw.size(); ++i) {
         // BPSK modulation: 0 -> +1, 1 -> -1
-        float modulated = (cw[i] == 0) ? 1.0f : -1.0f;
+        // float modulated = (cw[i] == 0) ? 1.0f : -1.0f;
+        float modulated = (cw[i] == 1) ? 1.0f : -1.0f;
         // Add Gaussian noise
+        
+        // llr_out[i] = modulated + distribution(generator);
+        // llr_out[i] = modulated;
         llr_out[i] = modulated * distribution(generator);
     }
 }
@@ -124,16 +136,16 @@ void channel(const bitvec& cw, float esno, fltvec& llr_out) {
 // Run all the tests in one round
 void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats &stats)
 {
+  // srand(42);
   // Allocate variables
-  bitvec info(k);
   bitvec cw(n);
   fltvec float_llr(n);
-  llrvec llr(n);
   bitvec cw_est(n);
   bitvec info_est(n);
 
   // Setup binary RNG
-  std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+  // std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+  std::default_random_engine generator;
   std::uniform_int_distribution<int> distribution(0, 1);
 
   // Construct encoder-decoder
@@ -148,15 +160,18 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
   // Setup
   stats.clear();
 
+  int block_error = 0;
+
   // Run tests
   for (int i = 0; i < n_block; ++i)
   {
+    if (i % 1000 ==  0) std::cout << "iter: " << i << std::endl;
+    bitvec info(k);
     // Generate random binary message of length test.k
     for (int j = 0; j < k; ++j) {
         info[j] = distribution(generator); // Random binary message
-        //std::cout << info[j] << " ";
+        // std::cout << info[j] << " ";
     }
-    //std::cout << std::endl;
 
     // Encode message
     auto enc_start = std::chrono::high_resolution_clock::now();
@@ -165,31 +180,34 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
 
     // Transmit message
     channel(cw, esno, float_llr);
-
-    // Convert int llr format
-    for (int j = 0; j < n; ++j) llr[j] = entry.llr2int(float_llr[j]);
-
+    double snr_linear = pow(10.0, esno / 10.0);
+    for (int i = 0; i < float_llr.size(); i++) {
+      float_llr[i] *= 0.25/snr_linear;
+    }
+    
     // Decode message
     auto dec_start = std::chrono::high_resolution_clock::now();
-    int detect = entry.decode(llr, cw_est, info_est);
+    int detect = entry.decode(float_llr, cw_est, info_est);
     auto dec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - dec_start).count();
 
     // Count number of bit errors
     int bit_err = 0;
-    for (int j = 0; j < k; ++j) {
+    for (int j = 0; j < K; ++j) {
         //std::cout << info_est[j] << " ";
         if (info[j] != info_est[j]) {
             ++bit_err;
         }
     }
-    //std::cout << std::endl;
-    //if (bit_err > 0 && detect==1) {
+    
+    if (bit_err > 0 && detect==1) {
     //  std::cout << "wrong codeword?" << std::endl;
-    //}
-
+     block_error++;
+    }
     // Update statistics
     stats.update(1-detect, bit_err, enc_time, dec_time);
-  }
+  } // for (int i = 0; i < n_block; ++i)
+
+  std::cout << "block error = " << block_error << std::endl;
 }
 
 // Run all the tests in one round
@@ -229,6 +247,7 @@ void run_test_number(int t, decoder_stats &stats)
 
 
 void run_single_test(int test_number) {
+  
     srand(static_cast<unsigned int>(time(0))); // Seed random number generator
     decoder_stats run_stats;
 
@@ -374,6 +393,7 @@ int main(int argc, char* argv[])
         } else {
             int test_number = std::stoi(iter->second);
             if (test_number >= 0 && test_number < N_TEST) {
+                std::cout << "running single test" << std::endl;
                 run_single_test(test_number);
             } else {
                 std::cerr << "Invalid test number: " << test_number << std::endl;

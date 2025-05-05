@@ -1,21 +1,32 @@
 CXX = g++
 CXXFLAGS = -Wall -O3 -std=c++17
-LDFLAGS = 
-SOURCES = enc_dec.cpp run_test.cpp ldpc.cpp test.cpp argmin.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE = run_test test
+LDFLAGS =
 
-all: $(EXECUTABLE)
+# All .cpp files and corresponding .o files
+SRC_FILES = $(wildcard *.cpp)
+OBJ_FILES = $(SRC_FILES:.cpp=.o)
 
-run_test: enc_dec.o run_test.o ldpc.o argmin.o
+# Define special objects
+RUN_TEST_MAIN = run_test.o
+TEST_MAIN     = test.o
+
+# Object files without the main files
+COMMON_OBJS = $(filter-out $(RUN_TEST_MAIN) $(TEST_MAIN), $(OBJ_FILES))
+
+# Targets
+EXECUTABLES = clean run_test test
+
+# Default target
+all: $(EXECUTABLES)
+
+run_test: $(RUN_TEST_MAIN) $(COMMON_OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $^
 
-test: test.o ldpc.o
+test: $(TEST_MAIN) $(COMMON_OBJS)
 	$(CXX) $(LDFLAGS) -o $@ $^
 
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJECTS) $(EXECUTABLE)
-	rm -f $(OBJECTS) $(EXECUTABLE)
+	rm -f *.o $(EXECUTABLES)
