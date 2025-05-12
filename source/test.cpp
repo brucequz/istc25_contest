@@ -5,6 +5,10 @@
 #include <chrono>
 #include <algorithm>
 #include "tbcc.h"
+#include "fixed_point.h"
+
+using fp16_16 = fixed<int32_t, int64_t, 16>;
+using fp8_8 = fixed<int16_t, int32_t, 8>;
 
 // Function declarations for tests
 // void test_no_error(tbcc &code, int verbose = 0);
@@ -166,38 +170,21 @@
 //     code.encode(info, cw);
 // }
 
+using fp16_16 = fixed<int32_t, int64_t, 16>;
+using fp8_8 = fixed<int16_t, int32_t, 8>;
+
 
 int main(int argc, char* argv[])
 {
-    return 0;
-    tbcc code;
     
-    // Test encoder
-    // test_tbcc_encode(code, 1);
+    constexpr fp16_16 a(3.83494);
+    constexpr fp16_16 b(-1);
 
-    // Generate short tbcc code
+    std::cout << "a: " << a.value << std::endl;
 
-    // Run test functions
-    // test_tbcc_encode(code, 0);
-    // test_no_error(code, 0); 
-    // test_single_error(code, 3.0f, 0);
-    // test_gaussian_noise(code, 0.8, 1); // Example ESNO value
+    constexpr double z = double(a * b);
 
-    // // Test encoder
-    // test_tbcc_encode(code, 0);
-
-    // // Test single error
-    // test_single_error(code, 3.0f, 1);
-
-    // // Test Gaussian noise
-    // test_gaussian_noise(code, 0.72, 0);
-
-    // // Test gaussian noise
-    // int count = 0;
-    // for (int i=0; i<100; ++i) {
-    //     if (!test_gaussian_noise(code, 0.72, 0))
-    //         count++;
-    // }
-    // std::cout << count << " errors out of 100 trials.\n"; 
+    
+    return 0;
 }
 

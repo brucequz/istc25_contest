@@ -13,6 +13,8 @@
 #include "enc_dec.h"
 #include "argmin.h"
 
+
+
 const int N_TEST = 12;
 
 // Define structure for each test point, specifying code parameters and test conditions
@@ -124,10 +126,11 @@ void channel(const bitvec& cw, float esno, fltvec& llr_out) {
 // Run all the tests in one round
 void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats &stats)
 {
-  // srand(42);
+  srand(42);
   // Allocate variables
   bitvec cw(n);
   fltvec float_llr(n);
+  llrvec llr(n);
   bitvec cw_est(n);
   bitvec info_est(n);
 
@@ -153,6 +156,7 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
   // Run tests
   for (int i = 0; i < n_block; ++i)
   {
+    if (i == 1) break;
     if (i % 1000 ==  0) std::cout << "iter: " << i << std::endl;
     bitvec info(k);
     // Generate random binary message of length test.k
@@ -172,10 +176,18 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     for (int i = 0; i < float_llr.size(); i++) {
       float_llr[i] *= 0.25/snr_linear;
     }
+
+    // Convert int llr format
+    for (int j = 0; j < n; ++j) {llr[j] = entry.llr2int(float_llr[j]);
+    std::cout << float_llr[j] << ", " << llr[j] << std::endl;}
+
+    std::vector<float> fixedp_llr(n);
+    for (int j = 0; j < n; ++j) fixedp_llr[j] = entry.fixed2float(llr[j]);
     
     // Decode message
     auto dec_start = std::chrono::high_resolution_clock::now();
     int detect = entry.decode(float_llr, cw_est, info_est);
+    int detect2 = entry.decode_fixedp(llr, cw_est, info_est);
     auto dec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - dec_start).count();
 
     // Count number of bit errors

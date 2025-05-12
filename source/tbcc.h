@@ -10,9 +10,10 @@
 #include <string>
 #include <vector>
 
-using intvec = std::vector<int>;
-using fltvec = std::vector<float>;
-using dblvec = std::vector<double>;
+// using intvec = std::vector<int>;
+// using fltvec = std::vector<float>;
+// using dblvec = std::vector<double>;
+// using llrvec = std::vector<int64_t>;
 
 // Class for generating, encoding, and decoding binary tbcc codes
 class tbcc
@@ -47,6 +48,8 @@ class tbcc
 
     // BALD decoding
     MessageInformation decode(fltvec &llr_in, double theta_t, intvec punctured_indices, int verbose);
+
+    MessageInformation decode_fixedp(llrvec &llr_in, double theta_t, intvec punctured_indices, int verbose = 0);
  
     // Encode k info bits into n codeword bits
     void encode(intvec &info, intvec &cw);

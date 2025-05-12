@@ -18,6 +18,7 @@ public:
 	MessageInformation lowRateDecoding_MaxMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 	MessageInformation lowRateDecoding_MaxAngle(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 	MessageInformation lowRateDecoding_MaxAngle_ProductMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
+	MessageInformation lowRateDecoding_MaxAngle_ProductMetric_fixedp(llrvec receivedMessage, std::vector<int> punctured_indices);
 
 	MessageInformation decode(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 
@@ -49,11 +50,20 @@ private:
 		bool init = false;
 	};
 
+	struct cell_fixedp {
+		int optimalFatherState = -1;
+		int suboptimalFatherState = -1;
+		fp16_16 pathMetric = fp16_16((1 << 15) - 1);
+		fp16_16 suboptimalPathMetric = fp16_16((1 << 15) - 1);
+		bool init = false;
+	};
+
   std::vector<int> pathToMessage(std::vector<int>); 
   std::vector<int> pathToCodeword(std::vector<int>); 
 	std::vector<std::vector<cell>> constructLowRateTrellis(std::vector<float> receivedMessage);
   std::vector<std::vector<cell>> constructLowRateTrellis_Punctured(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 	std::vector<std::vector<cell>> constructLowRateTrellis_Punctured_ProductMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
+	std::vector<std::vector<cell_fixedp>> constructLowRateTrellis_Punctured_ProductMetric_fixedp(llrvec receivedMessage, std::vector<int> punctured_indices);
 	std::vector<std::vector<std::vector<cell>>> constructLowRateMultiTrellis(std::vector<float> receivedMessage);
 	std::vector<std::vector<cell>> constructMinimumLikelihoodLowRateTrellis(std::vector<float> receivedMessage);
 };

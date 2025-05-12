@@ -3,6 +3,21 @@
 #include "tbcc_namespace.h"
 
 
+namespace fixed_point {
+template<size_t dp>
+constexpr int32_t DoubleToFixed(double d){
+	return int32_t(d * double(1 << dp) + (d >= 0 ? 0.5 : -0.5));
+}
+
+template<size_t dp>
+constexpr double FixedToDouble(int32_t fp){
+	return double(fp) / double(1 << dp);
+}
+} // namespace fixed_point
+
+constexpr int32_t a = fixed_point::DoubleToFixed<16>(3.5);
+constexpr double z = fixed_point::FixedToDouble<16>(a);
+
 namespace awgn {
 
 std::default_random_engine generator;
