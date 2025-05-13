@@ -24,9 +24,9 @@ std::vector<std::vector<LowRateListDecoder::cell_fixedp>> LowRateListDecoder::co
 	
 	// building the trellis
 	for(int stage = 0; stage < lowrate_pathLength - 1; stage++){
-    if (stage == 1) break;
+    // if (stage == 1) break;
 		for(int currentState = 0; currentState < lowrate_numStates; currentState++){
-      if (currentState == 1) break;
+      // if (currentState == 1) break;
 			// if the state / stage is invalid, we move on
 			if(!trellisInfo[currentState][stage].init)
 				continue;
@@ -45,20 +45,21 @@ std::vector<std::vector<LowRateListDecoder::cell_fixedp>> LowRateListDecoder::co
 				int64_t branchMetric = 0;
 				std::vector<int> output_point = crc::get_point(lowrate_outputs[currentState][forwardPathIndex], lowrate_symbolLength);
 				
-        std::cout << std::endl;
+        // std::cout << std::endl;
 				for(int i = 0; i < lowrate_symbolLength; i++) {
 					if (std::find(punctured_indices.begin(), punctured_indices.end(), lowrate_symbolLength * stage + i) != punctured_indices.end()){
 						branchMetric += 0;
 					} else {
 						branchMetric += -(receivedMessage[2 * stage + i] * fp16_16(output_point[i]));
-            std::cout << "received message 2 * stage + i: " << receivedMessage[2 * stage + i] << "; Output point: " << output_point[i];
+            // std::cout << "received message 2 * stage + i: " << receivedMessage[2 * stage + i] << "; Output point: " << output_point[i];
     
-            std::cout << "; branch metric: " << branchMetric << ", ";
+            // std::cout << "; branch metric: " << branchMetric << ", ";
 					}
 				}
 
 				
-				fp16_16 totalPathMetric = branchMetric + trellisInfo[currentState][stage].pathMetric;
+				int64_t totalPathMetric = branchMetric + trellisInfo[currentState][stage].pathMetric;
+        
 				
 				// dealing with cases of uninitialized states, when the transition becomes the optimal father state, and suboptimal father state, in order
 				if(!trellisInfo[nextState][stage + 1].init){
@@ -82,6 +83,8 @@ std::vector<std::vector<LowRateListDecoder::cell_fixedp>> LowRateListDecoder::co
 		}
     
 	}
+
+  // std::cout << "fixedp: " << trellisInfo[lowrate_numStates-1][lowrate_pathLength-2].pathMetric << std::endl;
 	return trellisInfo;
 }
 
@@ -97,13 +100,13 @@ MessageInformation LowRateListDecoder::lowRateDecoding_MaxAngle_ProductMetric_fi
 
   int trellis_height = trellisInfo.size();
   int trellis_width  = trellisInfo[0].size();
-  // std::cout << "fixed point solution: ";
-  // for (size_t i_cell = 0; i_cell < trellis_height; i_cell++) {
-  //   std::cout << trellisInfo[i_cell][trellis_width-1].pathMetric << ", ";
-  // }
-
-  
+  std::cout << "fixed point solution: ";
+  for (size_t i_cell = 0; i_cell < trellis_height; i_cell++) {
+    std::cout << trellisInfo[i_cell][trellis_width-2].pathMetric << ", ";
+  }
   std::cout << std::endl;
+
+
 	// // start search
 	MessageInformation output;
 	// //RBTree detourTree;

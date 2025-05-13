@@ -177,8 +177,8 @@ using fp8_8 = fixed<int16_t, int32_t, 8>;
 int main(int argc, char* argv[])
 {
     
-    constexpr fp16_16 a(3.83494);
-    constexpr fp16_16 b(-1);
+    constexpr fp16_16 a(-123.471);
+    constexpr fp16_16 b(-200);
     constexpr fp16_16 c(1);
 
     std::cout << "a: " << a.value << std::endl;

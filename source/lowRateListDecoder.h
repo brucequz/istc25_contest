@@ -53,7 +53,7 @@ private:
 	struct cell_fixedp {
 		int optimalFatherState = -1;
 		int suboptimalFatherState = -1;
-		fp16_16 pathMetric = fp16_16((1 << 15) - 1);
+		int64_t pathMetric = fp16_16((1 << 15) - 1);
 		fp16_16 suboptimalPathMetric = fp16_16((1 << 15) - 1);
 		bool init = false;
 	};
