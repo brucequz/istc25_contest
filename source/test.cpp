@@ -179,10 +179,11 @@ int main(int argc, char* argv[])
     
     constexpr fp16_16 a(3.83494);
     constexpr fp16_16 b(-1);
+    constexpr fp16_16 c(1);
 
     std::cout << "a: " << a.value << std::endl;
 
-    constexpr double z = double(a * b);
+    constexpr double z = (a * b).value;
 
     
     return 0;

@@ -38,7 +38,15 @@ MessageInformation LowRateListDecoder::decode(std::vector<float> receivedMessage
 
 MessageInformation LowRateListDecoder::lowRateDecoding_MaxAngle_ProductMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices){
 	std::vector<std::vector<cell>> trellisInfo;
-	trellisInfo = constructLowRateTrellis_Punctured(receivedMessage, punctured_indices);
+
+	// std::cout << std::endl;
+  // std::cout << "floating  point priting received message: ";
+  // for (size_t i_rv = 0; i_rv < receivedMessage.size(); i_rv++) {
+  //   std::cout << receivedMessage[i_rv] << ", ";
+  // }
+
+
+	trellisInfo = constructLowRateTrellis_Punctured_ProductMetric(receivedMessage, punctured_indices);
 
 
 	// int trellis_height = trellisInfo.size();
@@ -576,7 +584,6 @@ std::vector<std::vector<LowRateListDecoder::cell>> LowRateListDecoder::construct
 						branchMetric += 0;
 					} else {
 						branchMetric += std::pow(receivedMessage[lowrate_symbolLength * stage + i] - (float)output_point[i], 2);
-						std::cout << "floating point branch metric: " << branchMetric << ", ";
 					}
 				}
 				
@@ -599,9 +606,7 @@ std::vector<std::vector<LowRateListDecoder::cell>> LowRateListDecoder::construct
 					trellisInfo[nextState][stage + 1].suboptimalFatherState = currentState;
 				}
 			}
-			if (currentState == 1) break;
 		}
-		if (stage == 1) break;
 	}
 	return trellisInfo;
 }
@@ -630,7 +635,9 @@ std::vector<std::vector<LowRateListDecoder::cell>> LowRateListDecoder::construct
 	
 	// building the trellis
 	for(int stage = 0; stage < lowrate_pathLength - 1; stage++){
+		if (stage == 1) break;
 		for(int currentState = 0; currentState < lowrate_numStates; currentState++){
+			if (currentState == 1) break;
 			// if the state / stage is invalid, we move on
 			if(!trellisInfo[currentState][stage].init)
 				continue;
@@ -654,6 +661,8 @@ std::vector<std::vector<LowRateListDecoder::cell>> LowRateListDecoder::construct
 						branchMetric += 0;
 					} else {
 						branchMetric += -(receivedMessage[2 * stage + i] * (double)output_point[i]);
+						std::cout << "floating point received message 2 * stage + i: " << receivedMessage[2 * stage + i] << "; Output point: " << output_point[i];
+						std::cout << "; branch metric: " << branchMetric << ", " << std::endl;
 					}
 				}
 				
@@ -676,8 +685,9 @@ std::vector<std::vector<LowRateListDecoder::cell>> LowRateListDecoder::construct
 					trellisInfo[nextState][stage + 1].suboptimalFatherState = currentState;
 				}
 			}
-
+      
 		}
+		
 	}
 	return trellisInfo;
 }

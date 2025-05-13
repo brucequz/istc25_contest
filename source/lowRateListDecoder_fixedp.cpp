@@ -24,7 +24,9 @@ std::vector<std::vector<LowRateListDecoder::cell_fixedp>> LowRateListDecoder::co
 	
 	// building the trellis
 	for(int stage = 0; stage < lowrate_pathLength - 1; stage++){
+    if (stage == 1) break;
 		for(int currentState = 0; currentState < lowrate_numStates; currentState++){
+      if (currentState == 1) break;
 			// if the state / stage is invalid, we move on
 			if(!trellisInfo[currentState][stage].init)
 				continue;
@@ -40,15 +42,18 @@ std::vector<std::vector<LowRateListDecoder::cell_fixedp>> LowRateListDecoder::co
 				if(nextState < 0)
 					continue;
 				
-				fp16_16 branchMetric = 0;
+				int64_t branchMetric = 0;
 				std::vector<int> output_point = crc::get_point(lowrate_outputs[currentState][forwardPathIndex], lowrate_symbolLength);
 				
+        std::cout << std::endl;
 				for(int i = 0; i < lowrate_symbolLength; i++) {
 					if (std::find(punctured_indices.begin(), punctured_indices.end(), lowrate_symbolLength * stage + i) != punctured_indices.end()){
 						branchMetric += 0;
 					} else {
 						branchMetric += -(receivedMessage[2 * stage + i] * fp16_16(output_point[i]));
-            std::cout << "branch metric: " << branchMetric << ", ";
+            std::cout << "received message 2 * stage + i: " << receivedMessage[2 * stage + i] << "; Output point: " << output_point[i];
+    
+            std::cout << "; branch metric: " << branchMetric << ", ";
 					}
 				}
 
@@ -73,9 +78,9 @@ std::vector<std::vector<LowRateListDecoder::cell_fixedp>> LowRateListDecoder::co
 				}
 			}
       
-      if (currentState == 1) break;
+      
 		}
-    if (stage == 1) break;
+    
 	}
 	return trellisInfo;
 }
@@ -83,6 +88,11 @@ std::vector<std::vector<LowRateListDecoder::cell_fixedp>> LowRateListDecoder::co
 MessageInformation LowRateListDecoder::lowRateDecoding_MaxAngle_ProductMetric_fixedp(llrvec receivedMessage, std::vector<int> punctured_indices){
 	std::vector<std::vector<cell_fixedp>> trellisInfo;
 
+  // std::cout << std::endl;
+  // std::cout << "priting received message: ";
+  // for (size_t i_rv = 0; i_rv < receivedMessage.size(); i_rv++) {
+  //   std::cout << receivedMessage[i_rv] << ", ";
+  // }
 	trellisInfo = constructLowRateTrellis_Punctured_ProductMetric_fixedp(receivedMessage, punctured_indices);
 
   int trellis_height = trellisInfo.size();

@@ -178,9 +178,11 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     }
 
     // Convert int llr format
-    for (int j = 0; j < n; ++j) {llr[j] = entry.llr2int(float_llr[j]);
-    std::cout << float_llr[j] << ", " << llr[j] << std::endl;}
-
+    for (int j = 0; j < n; ++j) {llr[j] = entry.llr2int(float_llr[j]);}
+    
+    // std::cout << "printing float llrs: ";
+    // utils::print_double_vector(float_llr);
+    // std::cout << std::endl;
     std::vector<float> fixedp_llr(n);
     for (int j = 0; j < n; ++j) fixedp_llr[j] = entry.fixed2float(llr[j]);
     

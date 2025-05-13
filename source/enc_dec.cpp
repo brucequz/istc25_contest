@@ -21,7 +21,6 @@ int enc_dec::init(int k, int n, bool opt_avg_latency) {
 int64_t enc_dec::llr2int(float float_llr) {
     // Contestants should replace this code
     //   This code should convert a single LLR to the integer representation used by decoder
-    std::cout << "int value: " << fp16_16(float_llr).value << std::endl;
     return fp16_16(float_llr).value;
     // return std::round((32768/25.0)*float_llr);
 }
@@ -67,18 +66,18 @@ int enc_dec::decode(fltvec &llr, bitvec &cw_est, bitvec &info_est) {
         }
     }    
     // projecting onto the codeword sphere
-    float received_word_energy = utils::compute_vector_energy(unpunctured_symbols);
-    float energy_normalize_factor = std::sqrt(128.0 / received_word_energy);  // normalizing received message
-    std::vector<float> projected_received_word(unpunctured_symbols.size(), 0.0);
-    for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
-      projected_received_word[i] = unpunctured_symbols[i] * energy_normalize_factor;
-    }
+    // float received_word_energy = utils::compute_vector_energy(unpunctured_symbols);
+    // float energy_normalize_factor = std::sqrt(128.0 / received_word_energy);  // normalizing received message
+    // std::vector<float> projected_received_word(unpunctured_symbols.size(), 0.0);
+    // for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
+    //   projected_received_word[i] = unpunctured_symbols[i] * energy_normalize_factor;
+    // }
 
     // std::cout << "unpuncture the bits" << std::endl;
     // utils::print_double_vector(unpunctured_symbols);
     // std::cout << std::endl;
 
-    MessageInformation mi_result = code.decode(projected_received_word, 4, PUNCTURING_INDICES, 0);
+    MessageInformation mi_result = code.decode(unpunctured_symbols, 4, PUNCTURING_INDICES, 0);
     
     info_est = mi_result.message;
     int result = 1;
