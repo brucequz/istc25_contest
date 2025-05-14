@@ -24,7 +24,7 @@ MessageInformation tbcc::decode(fltvec &llr_in, double theta_t, intvec punctured
     // return decoder.decode(llr_in, punctured_indices);
 }
 
-MessageInformation tbcc::decode_fixedp(llrvec &llr_in, double theta_t, intvec punctured_indices, int verbose) {
+MessageInformation_fixedp tbcc::decode_fixedp(llrvec &llr_in, double theta_t, intvec punctured_indices, int verbose) {
     // first decode using product metric
     return decoder.lowRateDecoding_MaxAngle_ProductMetric_fixedp(llr_in, punctured_indices);
     // returns the correct result we get from squared distance metric

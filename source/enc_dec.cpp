@@ -67,6 +67,7 @@ int enc_dec::decode(fltvec &llr, bitvec &cw_est, bitvec &info_est) {
     }    
     // projecting onto the codeword sphere
     // float received_word_energy = utils::compute_vector_energy(unpunctured_symbols);
+    // std::cout << "floating point received word energy: " << received_word_energy << std::endl;
     // float energy_normalize_factor = std::sqrt(128.0 / received_word_energy);  // normalizing received message
     // std::vector<float> projected_received_word(unpunctured_symbols.size(), 0.0);
     // for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
@@ -99,19 +100,17 @@ int enc_dec::decode_fixedp(llrvec&llr, bitvec &cw_est, bitvec &info_est) {
             unpunctured_symbols[i] = 0;
         }
     }    
-    // projecting onto the codeword sphere
-    // float received_word_energy = utils::compute_vector_energy(unpunctured_symbols);
-    // float energy_normalize_factor = std::sqrt(128.0 / received_word_energy);  // normalizing received message
+    
+
+    // int32_t energy_normalize_factor = sqrt(128.0 / received_word_energy);  // normalizing received message
     // std::vector<float> projected_received_word(unpunctured_symbols.size(), 0.0);
     // for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
     //   projected_received_word[i] = unpunctured_symbols[i] * energy_normalize_factor;
     // }
 
-    // std::cout << "unpuncture the bits" << std::endl;
-    // utils::print_double_vector(unpunctured_symbols);
-    // std::cout << std::endl;
+    
 
-    MessageInformation mi_result = code.decode_fixedp(unpunctured_symbols, 4, PUNCTURING_INDICES, 0);
+    MessageInformation_fixedp mi_result = code.decode_fixedp(unpunctured_symbols, 4, PUNCTURING_INDICES, 0);
     
     info_est = mi_result.message;
     int result = 1;

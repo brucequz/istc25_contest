@@ -4,6 +4,7 @@
 
 #include <climits>
 #include <iostream>
+#include <algorithm>
 
 #include "FeedForwardTrellis.h"
 #include "minHeap.h"
@@ -18,7 +19,8 @@ public:
 	MessageInformation lowRateDecoding_MaxMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 	MessageInformation lowRateDecoding_MaxAngle(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 	MessageInformation lowRateDecoding_MaxAngle_ProductMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
-	MessageInformation lowRateDecoding_MaxAngle_ProductMetric_fixedp(llrvec receivedMessage, std::vector<int> punctured_indices);
+	MessageInformation_fixedp lowRateDecoding_MaxAngle_ProductMetric_fixedp(llrvec receivedMessage, std::vector<int> punctured_indices);
+	MessageInformation_fixedp lowRateDecoding_MaxListsize_fixedp(llrvec receivedMessage, std::vector<int> punctured_indices);
 
 	MessageInformation decode(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 
@@ -53,8 +55,8 @@ private:
 	struct cell_fixedp {
 		int optimalFatherState = -1;
 		int suboptimalFatherState = -1;
-		int64_t pathMetric = fp16_16((1 << 15) - 1);
-		fp16_16 suboptimalPathMetric = fp16_16((1 << 15) - 1);
+		int32_t pathMetric = (1 << 31) - 1;
+		int32_t suboptimalPathMetric = (1 << 31) - 1;
 		bool init = false;
 	};
 

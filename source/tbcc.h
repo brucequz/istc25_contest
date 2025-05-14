@@ -49,7 +49,7 @@ class tbcc
     // BALD decoding
     MessageInformation decode(fltvec &llr_in, double theta_t, intvec punctured_indices, int verbose);
 
-    MessageInformation decode_fixedp(llrvec &llr_in, double theta_t, intvec punctured_indices, int verbose = 0);
+    MessageInformation_fixedp decode_fixedp(llrvec &llr_in, double theta_t, intvec punctured_indices, int verbose = 0);
  
     // Encode k info bits into n codeword bits
     void encode(intvec &info, intvec &cw);

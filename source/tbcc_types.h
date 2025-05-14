@@ -59,8 +59,8 @@ struct MessageInformation_fixedp{
 	int listSize;
   int TBListSize;
 	bool listSizeExceeded;
-	fp16_16 metric;
-	fp16_16 angle_received_decoded_rad;
+	int64_t metric;
+	int64_t angle_received_decoded_rad;
 	std::vector<double> pathToTransmittedCodewordHistory;
 	std::vector<double> decodedCodewordSquaredNoiseMag;
 };

@@ -14,7 +14,7 @@
 #include "argmin.h"
 
 
-
+std::default_random_engine generator;
 const int N_TEST = 12;
 
 // Define structure for each test point, specifying code parameters and test conditions
@@ -34,7 +34,7 @@ test_point contest[N_TEST] =
   {128,512,0.1,2000,0},  // k=128 R=1/4
   {256,1024,0.1,2000,0}, // k=256 R=1/4
   {512,2048,0.1,2000,0}, // k=512 R=1/4
-  {64,128,-0.5,100000,0},   // k=64 R=1/2
+  {64,128,-0.5,10000,0},   // k=64 R=1/2
   {128,256,1.0,2000,0},  // k=128 R=1/2
   {256,512,1.0,2000,0},  // k=256 R=1/2
   {512,1024,1.0,2000,0}, // k=512 R=1/2
@@ -113,7 +113,8 @@ class decoder_stats : public stats<int,4>
 void channel(const bitvec& cw, float esno, fltvec& llr_out) {
     llr_out.resize(cw.size());
     double snr_linear = pow(10.0, esno / 10.0);
-    std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+    // std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
+    
     std::normal_distribution<float> distribution(4.0*snr_linear, std::sqrt(8.0*snr_linear));
     
     for (size_t i = 0; i < cw.size(); ++i) {
@@ -156,8 +157,8 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
   // Run tests
   for (int i = 0; i < n_block; ++i)
   {
-    if (i == 1) break;
-    if (i % 1000 ==  0) std::cout << "iter: " << i << std::endl;
+    // if (i == 1) break;
+    if (i % 100 ==  0) std::cout << "iter: " << i << std::endl;
     bitvec info(k);
     // Generate random binary message of length test.k
     for (int j = 0; j < k; ++j) {
@@ -189,7 +190,7 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     // Decode message
     auto dec_start = std::chrono::high_resolution_clock::now();
     int detect = entry.decode(float_llr, cw_est, info_est);
-    int detect2 = entry.decode_fixedp(llr, cw_est, info_est);
+    // int detect = entry.decode_fixedp(llr, cw_est, info_est);
     auto dec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - dec_start).count();
 
     // Count number of bit errors

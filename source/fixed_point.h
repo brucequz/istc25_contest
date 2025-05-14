@@ -77,7 +77,24 @@ public:
     this->value = ((T2(this->value) << dp) / T2(f.value)); return *this;
   }
 
+  // Square Root
+  static fixed sqrt(const fixed& x) {
+    if (x.value <= 0)
+      return fixed(0);
 
+    T2 xn = T2(x.value);                // initial guess in Qdp
+    xn = xn < (1 << dp) ? (1 << dp) : xn;  // avoid dividing by too small
+
+    // Convert x to Q2dp to preserve precision during iteration
+    T2 x_q2dp = T2(x.value) << dp;      // x * 2^dp → Q2dp
+
+    for (int i = 0; i < 6; ++i) {
+      // Newton-Raphson: y_{n+1} = (y_n + x / y_n) / 2
+      xn = (xn + x_q2dp / xn) >> 1;
+    }
+
+    return form(T(xn)); // still in Qdp scale
+  }
 
 };
 

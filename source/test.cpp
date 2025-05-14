@@ -177,11 +177,13 @@ using fp8_8 = fixed<int16_t, int32_t, 8>;
 int main(int argc, char* argv[])
 {
     
-    constexpr fp16_16 a(-123.471);
+    constexpr fp16_16 a(9.5);
     constexpr fp16_16 b(-200);
     constexpr fp16_16 c(1);
 
-    std::cout << "a: " << a.value << std::endl;
+    fp16_16 a_sqrt = sqrt(a);
+
+    std::cout << "a_sqrt: " << a_sqrt.value << std::endl;
 
     constexpr double z = (a * b).value;
 

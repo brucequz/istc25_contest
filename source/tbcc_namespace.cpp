@@ -150,10 +150,11 @@ float compute_angle_between_vectors_rad(std::vector<float> vec1, std::vector<int
 	// assumes the energy of the integer vector is 128.
 	if (vec1.size() != vec2.size()) {std::cerr << "INVALID INNER PRODUCT DUE TO UNCOMPATIBLE SHAPE! ABORT!" << std::endl; exit(1);}
 	float inner_product = std::inner_product(vec1.begin(), vec1.end(), vec2.begin(), 0.0);
+	std::cout << "inner product: " << inner_product << std::endl;
 	
 	// std::cout << "vec1 size " << vec1.size() << ", inner product " << inner_product << std::endl;
 	float vec1_energy_sqrt = std::sqrt(compute_vector_energy(vec1));
-	// std::cout << "vec1 energy sqrt" << vec1_energy_sqrt << std::endl;
+	std::cout << "vec1 energy sqrt" << vec1_energy_sqrt << std::endl;
 	float vec2_energy_sqrt = std::sqrt(128);
 	float angle_rad = std::acos( std::max(-1.0f, std::min(1.0f, inner_product/(vec1_energy_sqrt * vec2_energy_sqrt))) );
 	return angle_rad;
