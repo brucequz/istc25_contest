@@ -173,10 +173,10 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
 
     // Transmit message
     channel(cw, esno, float_llr);
-    // double snr_linear = pow(10.0, esno / 10.0);
-    // for (int i = 0; i < float_llr.size(); i++) {
-    //   float_llr[i] *= 0.25/snr_linear;
-    // }
+    fltvec cw_float;
+    for (size_t i = 0; i < cw.size(); i++) {
+      cw_float.push_back(float(cw[i]));
+    }
 
     // Convert int llr format
     // for (int j = 0; j < n; ++j) {llr[j] = entry.llr2int(float_llr[j]);}
@@ -186,7 +186,7 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     
     // Decode message
     auto dec_start = std::chrono::high_resolution_clock::now();
-    int detect = entry.decode(float_llr, cw_est, info_est);
+    int detect = entry.decode(cw_float, cw_est, info_est);
     // int detect = entry.decode_fixedp(llr, cw_est, info_est);
     auto dec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - dec_start).count();
 

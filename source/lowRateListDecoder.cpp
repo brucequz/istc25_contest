@@ -40,25 +40,7 @@ MessageInformation LowRateListDecoder::decode(std::vector<float> receivedMessage
 MessageInformation LowRateListDecoder::lowRateDecoding_MaxAngle_ProductMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices){
 	std::vector<std::vector<cell>> trellisInfo;
 
-	// std::cout << std::endl;
-  // std::cout << "floating  point priting received message: ";
-  // for (size_t i_rv = 0; i_rv < receivedMessage.size(); i_rv++) {
-  //   std::cout << receivedMessage[i_rv] << ", ";
-  // }
-
-
 	trellisInfo = constructLowRateTrellis_Punctured_ProductMetric(receivedMessage, punctured_indices);
-
-
-
-	int trellis_height = trellisInfo.size();
-  int trellis_width  = trellisInfo[0].size();
-	// std::cout << "trellis heigh: " << trellis_height << ", trellis width = " << trellis_width << std::endl;
-	// std::cout << "floating point solution: " << std::endl;
-  // for (size_t i_cell = 0; i_cell < trellis_height; i_cell++) {
-  //   std::cout << trellisInfo[i_cell][trellis_width-2].pathMetric << ", ";
-  // }
-  // std::cout << std::endl;
 
 	// start search
 	MessageInformation output;
@@ -183,7 +165,7 @@ MessageInformation LowRateListDecoder::lowRateDecoding_MaxListsize(std::vector<f
 	//RBTree detourTree;
 	MinHeap detourTree;
 	std::vector<std::vector<int>> previousPaths;
-	
+
 
 	// create nodes for each valid ending state with no detours
 	// std::cout<< "end path metrics:" <<std::endl;
@@ -196,7 +178,7 @@ MessageInformation LowRateListDecoder::lowRateDecoding_MaxListsize(std::vector<f
 
 	int numPathsSearched = 0;
 	int TBPathsSearched = 0;
-  
+
 	while(numPathsSearched < this->listSize){
 		DetourObject detour = detourTree.pop();
 		std::vector<int> path(lowrate_pathLength);
@@ -258,10 +240,10 @@ MessageInformation LowRateListDecoder::lowRateDecoding_MaxListsize(std::vector<f
 		if(path[0] == path[lowrate_pathLength - 1] && crc::crc_check(message, crcDegree, crc) && numPathsSearched <= this->listSize){
 			output.message = message;
 			output.path = path;
-		 	output.listSize = numPathsSearched + 1;
+			output.listSize = numPathsSearched + 1;
 			output.metric = forwardPartialPathMetric;
 			output.TBListSize = TBPathsSearched + 1;
-		 	return output;
+			return output;
 		}
 
 		numPathsSearched++;
@@ -643,15 +625,14 @@ std::vector<std::vector<LowRateListDecoder::cell>> LowRateListDecoder::construct
 
 	// initializes all the valid starting states
 	for(int i = 0; i < lowrate_numStates; i++){
+		// std::cout << "before setting to 0: " << trellisInfo[i][0].pathMetric << std::endl;
 		trellisInfo[i][0].pathMetric = 0;
 		trellisInfo[i][0].init = true;
 	}
 	
 	// building the trellis
 	for(int stage = 0; stage < lowrate_pathLength - 1; stage++){
-		// if (stage == 1) break;
 		for(int currentState = 0; currentState < lowrate_numStates; currentState++){
-			// if (currentState == 1) break;
 			// if the state / stage is invalid, we move on
 			if(!trellisInfo[currentState][stage].init)
 				continue;
@@ -674,14 +655,11 @@ std::vector<std::vector<LowRateListDecoder::cell>> LowRateListDecoder::construct
 					if (std::find(punctured_indices.begin(), punctured_indices.end(), lowrate_symbolLength * stage + i) != punctured_indices.end()){
 						branchMetric += 0;
 					} else {
-						branchMetric += -(receivedMessage[2 * stage + i] * (double)output_point[i]);
-						// std::cout << "floating point received message 2 * stage + i: " << receivedMessage[2 * stage + i] << "; Output point: " << output_point[i];
-						// std::cout << "; branch metric: " << branchMetric << ", " << std::endl;
+						branchMetric += -receivedMessage[lowrate_symbolLength* stage + i] * (float)output_point[i];
 					}
 				}
 				
 				float totalPathMetric = branchMetric + trellisInfo[currentState][stage].pathMetric;
-				// std::cout << "total Path Metric: " << totalPathMetric << std::endl;
 				
 				// dealing with cases of uninitialized states, when the transition becomes the optimal father state, and suboptimal father state, in order
 				if(!trellisInfo[nextState][stage + 1].init){
@@ -700,11 +678,8 @@ std::vector<std::vector<LowRateListDecoder::cell>> LowRateListDecoder::construct
 					trellisInfo[nextState][stage + 1].suboptimalFatherState = currentState;
 				}
 			}
-      
 		}
-		
 	}
-	// std::cout << "floatp: " << trellisInfo[lowrate_numStates-1][lowrate_pathLength-2].pathMetric << std::endl;
 	return trellisInfo;
 }
 
