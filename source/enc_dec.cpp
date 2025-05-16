@@ -54,7 +54,8 @@ void enc_dec::encode(bitvec &info, bitvec &cw) {
 // Decode n llrs into n codeword bits and k info bits, return -1 if detected error
 int enc_dec::decode(fltvec &llr, bitvec &cw_est, bitvec &info_est) {
     
-    fltvec unpunctured_symbols(152);
+    // std::cout << "channel_llr size " << llr.size() << std::endl;
+    fltvec unpunctured_symbols(N + PUNCTURING_INDICES.size());
     auto llr_ptr = llr.begin();
     for (int i = 0; i < unpunctured_symbols.size(); i++) {
         if (find(PUNCTURING_INDICES.begin(), PUNCTURING_INDICES.end(), i) == PUNCTURING_INDICES.end()) {
@@ -66,19 +67,20 @@ int enc_dec::decode(fltvec &llr, bitvec &cw_est, bitvec &info_est) {
         }
     }    
     // projecting onto the codeword sphere
-    // float received_word_energy = utils::compute_vector_energy(unpunctured_symbols);
+    float received_word_energy = utils::compute_vector_energy(unpunctured_symbols);
     // std::cout << "floating point received word energy: " << received_word_energy << std::endl;
-    // float energy_normalize_factor = std::sqrt(128.0 / received_word_energy);  // normalizing received message
-    // std::vector<float> projected_received_word(unpunctured_symbols.size(), 0.0);
-    // for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
-    //   projected_received_word[i] = unpunctured_symbols[i] * energy_normalize_factor;
-    // }
+    float energy_normalize_factor = std::sqrt(N / received_word_energy);  // normalizing received message
+    std::vector<float> projected_received_word(unpunctured_symbols.size(), 0.0);
+    for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
+      projected_received_word[i] = unpunctured_symbols[i] * energy_normalize_factor;
+    }
 
-    // std::cout << "unpuncture the bits" << std::endl;
-    // utils::print_double_vector(unpunctured_symbols);
-    // std::cout << std::endl;
+    float post_projection_energy = utils::compute_vector_energy(projected_received_word);
 
-    MessageInformation mi_result = code.decode(unpunctured_symbols, 4, PUNCTURING_INDICES, 0);
+
+    // std::cout << "projected_received_word size " << projected_received_word.size() << ", energy: " << post_projection_energy << std::endl;
+
+    MessageInformation mi_result = code.decode(projected_received_word, 4, PUNCTURING_INDICES, 0);
     
     info_est = mi_result.message;
     int result = 1;
@@ -89,6 +91,8 @@ int enc_dec::decode(fltvec &llr, bitvec &cw_est, bitvec &info_est) {
 // Decode n llrs into n codeword bits and k info bits, return -1 if detected error
 int enc_dec::decode_fixedp(llrvec&llr, bitvec &cw_est, bitvec &info_est) {
     
+
+    // inserting zeros at the punctured positions
     llrvec unpunctured_symbols(152);
     auto llr_ptr = llr.begin();
     for (int i = 0; i < unpunctured_symbols.size(); i++) {

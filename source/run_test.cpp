@@ -30,11 +30,11 @@ struct test_point
 // Define set of tests
 test_point contest[N_TEST] =
 {
-  {64,256,1.0,2000,0},   // k=64 R=1/4
+  {64,256,10,2000,0},   // k=64 R=1/4
   {128,512,0.1,2000,0},  // k=128 R=1/4
   {256,1024,0.1,2000,0}, // k=256 R=1/4
   {512,2048,0.1,2000,0}, // k=512 R=1/4
-  {64,128,-0.5,10000,0},   // k=64 R=1/2
+  {64,128,0,10000,0},   // k=64 R=1/2
   {128,256,1.0,2000,0},  // k=128 R=1/2
   {256,512,1.0,2000,0},  // k=256 R=1/2
   {512,1024,1.0,2000,0}, // k=512 R=1/2
@@ -173,19 +173,16 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
 
     // Transmit message
     channel(cw, esno, float_llr);
-    double snr_linear = pow(10.0, esno / 10.0);
-    for (int i = 0; i < float_llr.size(); i++) {
-      float_llr[i] *= 0.25/snr_linear;
-    }
+    // double snr_linear = pow(10.0, esno / 10.0);
+    // for (int i = 0; i < float_llr.size(); i++) {
+    //   float_llr[i] *= 0.25/snr_linear;
+    // }
 
     // Convert int llr format
-    for (int j = 0; j < n; ++j) {llr[j] = entry.llr2int(float_llr[j]);}
+    // for (int j = 0; j < n; ++j) {llr[j] = entry.llr2int(float_llr[j]);}
     
-    // std::cout << "printing float llrs: ";
-    // utils::print_double_vector(float_llr);
-    // std::cout << std::endl;
-    std::vector<float> fixedp_llr(n);
-    for (int j = 0; j < n; ++j) fixedp_llr[j] = entry.fixed2float(llr[j]);
+    // std::vector<float> fixedp_llr(n);
+    // for (int j = 0; j < n; ++j) fixedp_llr[j] = entry.fixed2float(llr[j]);
     
     // Decode message
     auto dec_start = std::chrono::high_resolution_clock::now();
@@ -193,6 +190,7 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     // int detect = entry.decode_fixedp(llr, cw_est, info_est);
     auto dec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - dec_start).count();
 
+    // std::cout << "info length: " << cw.size() << ", info est size = " << cw_est.size() << std::endl;
     // Count number of bit errors
     int bit_err = 0;
     for (int j = 0; j < K; ++j) {
@@ -203,7 +201,7 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     }
     
     if (bit_err > 0 && detect==1) {
-    //  std::cout << "wrong codeword?" << std::endl;
+     std::cout << "wrong codeword?" << std::endl;
      block_error++;
     }
     // Update statistics

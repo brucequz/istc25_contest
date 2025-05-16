@@ -50,8 +50,10 @@ MessageInformation LowRateListDecoder::lowRateDecoding_MaxAngle_ProductMetric(st
 	trellisInfo = constructLowRateTrellis_Punctured_ProductMetric(receivedMessage, punctured_indices);
 
 
-	// int trellis_height = trellisInfo.size();
-  // int trellis_width  = trellisInfo[0].size();
+
+	int trellis_height = trellisInfo.size();
+  int trellis_width  = trellisInfo[0].size();
+	// std::cout << "trellis heigh: " << trellis_height << ", trellis width = " << trellis_width << std::endl;
 	// std::cout << "floating point solution: " << std::endl;
   // for (size_t i_cell = 0; i_cell < trellis_height; i_cell++) {
   //   std::cout << trellisInfo[i_cell][trellis_width-2].pathMetric << ", ";
@@ -143,7 +145,7 @@ MessageInformation LowRateListDecoder::lowRateDecoding_MaxAngle_ProductMetric(st
 
 		// another way to compute the angle
 		// currentAngleExplored = utils::compute_angle_between_vectors_rad(receivedMessage, codeword);
-		currentAngleExplored = std::acos( std::max(-1.0f, std::min(1.0f, -forwardPartialPathMetric/128)) );
+		currentAngleExplored = std::acos( std::max(-1.0f, std::min(1.0f, -forwardPartialPathMetric/N)) );
 		// std::cout << "current Angle: " << currentAngleExplored << std::endl;
 		// std::cout << "max angle: " << MAX_ANGLE << std::endl;
 		
@@ -155,8 +157,8 @@ MessageInformation LowRateListDecoder::lowRateDecoding_MaxAngle_ProductMetric(st
 			output.metric = forwardPartialPathMetric;
 			output.TBListSize = TBPathsSearched + 1;
 			output.angle_received_decoded_rad = currentAngleExplored;
-			// std::cout << "floatp list size: " << output.listSize << std::endl;
-			// std::cout << "floating point returning metric = " << forwardPartialPathMetric << std::endl;
+			// std::cout << "returning message length = " << message.size() << std::endl;
+			
 			return output;
 		}
 

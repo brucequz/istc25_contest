@@ -1,32 +1,34 @@
 CXX = g++
-CXXFLAGS = -Wall -O3 -std=c++17
-LDFLAGS =
+CXXFLAGS = -std=c++17 -Wall -O3
 
-# All .cpp files and corresponding .o files
-SRC_FILES = $(wildcard *.cpp)
-OBJ_FILES = $(SRC_FILES:.cpp=.o)
+# Default config (can override with `make CONFIG=K64N256`)
+CONFIG ?= K64N128
 
-# Define special objects
-RUN_TEST_MAIN = run_test.o
-TEST_MAIN     = test.o
+# Source files (excluding test.cpp)
+SRC_FILES = $(filter-out test.cpp, $(wildcard *.cpp))
+OBJS = $(SRC_FILES:.cpp=.o)
 
-# Object files without the main files
-COMMON_OBJS = $(filter-out $(RUN_TEST_MAIN) $(TEST_MAIN), $(OBJ_FILES))
+# Executable name
+TARGET = run_test
 
-# Targets
-EXECUTABLES = clean run_test test
+# Include paths
+INCLUDES = -I.
 
-# Default target
-all: $(EXECUTABLES)
+# Default rule
+all: clean consts.h $(TARGET)
 
-run_test: $(RUN_TEST_MAIN) $(COMMON_OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $^
+# Symlink or copy the correct consts file
+consts.h:
+	cp consts_$(CONFIG).h consts.h
 
-test: $(TEST_MAIN) $(COMMON_OBJS)
-	$(CXX) $(LDFLAGS) -o $@ $^
-
+# Compile rule
 %.o: %.cpp
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -DCONFIG_$(CONFIG) -c $< -o $@
 
+# Linking
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+# Clean
 clean:
-	rm -f *.o $(EXECUTABLES)
+	rm -f $(OBJS) $(TARGET) consts.h

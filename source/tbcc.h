@@ -38,8 +38,8 @@ class tbcc
     std::vector<std::vector<int>> parity_generator;
 
     // Constructor
-    tbcc() : k_(k), n_(n), v_(V), theta_t_(0), numerators({POLY1, POLY2}), 
-              trellis(k, n, V, {POLY1, POLY2}), decoder(trellis, 1e7, M+1, CRC, 'A'){}
+    tbcc() : k_(k), n_(n), v_(V), theta_t_(0), numerators(NUMERATORS), 
+              trellis(k, n, V, NUMERATORS), decoder(trellis, 1e7, M+1, CRC, 'A'){}
 
     // tbcc() : k(K), n(N), v(V), theta_t(0), numerators({POLY1, POLY2}) {}
 

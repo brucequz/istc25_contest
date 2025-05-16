@@ -19,8 +19,10 @@ public:
 	MessageInformation lowRateDecoding_MaxMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 	MessageInformation lowRateDecoding_MaxAngle(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 	MessageInformation lowRateDecoding_MaxAngle_ProductMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
-	MessageInformation_fixedp lowRateDecoding_MaxAngle_ProductMetric_fixedp(llrvec receivedMessage, std::vector<int> punctured_indices);
+
+	/* - Fixed Point - */
 	MessageInformation_fixedp lowRateDecoding_MaxListsize_fixedp(llrvec receivedMessage, std::vector<int> punctured_indices);
+	// MessageInformation_fixedp lowRateDecoding_MaxListsize_fixedp(llrvec receivedMessage, std::vector<int> punctured_indices);
 
 	MessageInformation decode(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 
