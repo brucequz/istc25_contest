@@ -43,16 +43,26 @@ using fp8_8 = fixed<int16_t, int32_t, 8>;
 //         std::cout << std::endl;
 //     }
 
-//     // Decode
-//     MessageInformation result = code.decode(llr, 0.87, PUNCTURING_INDICES, 1);
+    // Decode
+    int result = code.decode(llr, 20, llr_est);
 
+    if (verbose) {
+        std::cout << "Decoded LLRs: ";
+        for (const auto &llr_value : llr_est) {
+            if (llr_value <= 0) {
+                std::cout << "XXX" << llr_value << " XXX ";
+            } else
+                std::cout << llr_value << " ";
+        }
+        std::cout << std::endl;
+    }
 
-//     if (result == 1) {
-//        std::cout << "Test No Error: Passed" << std::endl;
-//     } else {
-//         std::cout << "Test No Error: Failed" << std::endl;
-//     }
-// }
+    if (result == 1) {
+       std::cout << "Test No Error: Passed" << std::endl;
+    } else {
+        std::cout << "Test No Error: Failed" << std::endl;
+    }
+}
 
 // void test_single_error(tbcc &code, float llr_mag, int verbose) {
 //     intvec info(code.n_cols, 0); // Initialize info bits to zero
@@ -78,7 +88,7 @@ using fp8_8 = fixed<int16_t, int32_t, 8>;
 //         std::cout << "Decoding..." << std::endl;
 //     }
 
-//     int result = code.decode(llr, 20, llr_out, verbose);
+    int result = code.decode(llr, 20, llr_out);
 
 //     if (verbose) {
 //         std::cout << "LLR output from decoder: ";
@@ -128,7 +138,7 @@ using fp8_8 = fixed<int16_t, int32_t, 8>;
 //         std::cout << std::endl;
 //     }
 
-//     int result = code.decode(llr, 0.87, PUNCTURING_INDICES, verbose);
+    int result = code.decode(llr, 20, llr_out);
 
 //     if (verbose) {
 //         std::cout << "LLR output from decoder: ";
