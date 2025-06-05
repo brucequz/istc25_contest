@@ -47,7 +47,7 @@ class tbcc
     void create_encoder(int verbose = 0);
 
     // BALD decoding
-    MessageInformation decode(fltvec &llr_in, double theta_t, intvec punctured_indices, int verbose);
+    MessageInformation decode(fltvec &llr_in, intvec punctured_indices, int verbose);
 
     MessageInformation_fixedp decode_fixedp(llrvec &llr_in, double theta_t, intvec punctured_indices, int verbose = 0);
  

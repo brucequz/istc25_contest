@@ -30,15 +30,15 @@ struct test_point
 // Define set of tests
 test_point contest[N_TEST] =
 {
-  {64,256,10,2000,0},   // k=64 R=1/4
-  {128,512,0.1,2000,0},  // k=128 R=1/4
-  {256,1024,0.1,2000,0}, // k=256 R=1/4
-  {512,2048,0.1,2000,0}, // k=512 R=1/4
-  {64,128,0,10000,0},   // k=64 R=1/2
-  {128,256,1.0,2000,0},  // k=128 R=1/2
-  {256,512,1.0,2000,0},  // k=256 R=1/2
-  {512,1024,1.0,2000,0}, // k=512 R=1/2
-  {64,80,3.0,2000,0},    // k=64 R=4/5
+  {64,256,-4.4,2000,0},   // k=64 R=1/4, 0
+  {128,512,0.1,2000,0},  // k=128 R=1/4, 1
+  {256,1024,0.1,2000,0}, // k=256 R=1/4, 2
+  {512,2048,0.1,2000,0}, // k=512 R=1/4, 3
+  {64,128,0,10000,0},   // k=64 R=1/2, 4
+  {128,256,1.0,2000,0},  // k=128 R=1/2, 5
+  {256,512,1.0,2000,0},  // k=256 R=1/2, 6
+  {512,1024,1.0,2000,0}, // k=512 R=1/2, 7
+  {64,80,3.8,1,0},    // k=64 R=4/5, 8
   {128,160,3.0,2000,0},  // k=128 R=4/5
   {256,320,3.0,2000,0},  // k=256 R=4/5
   {512,640,3.0,2000,0}   // k=512 R=4/5
@@ -113,6 +113,7 @@ class decoder_stats : public stats<int,4>
 void channel(const bitvec& cw, float esno, fltvec& llr_out) {
     llr_out.resize(cw.size());
     double snr_linear = pow(10.0, esno / 10.0);
+    std::cout << "snr_linear = " << snr_linear << std::endl;
     // std::default_random_engine generator(std::chrono::system_clock::now().time_since_epoch().count());
     
     std::normal_distribution<float> distribution(4.0*snr_linear, std::sqrt(8.0*snr_linear));
@@ -121,6 +122,7 @@ void channel(const bitvec& cw, float esno, fltvec& llr_out) {
         // BPSK modulation: 0 -> +1, 1 -> -1
         float modulated = (cw[i] == 1) ? 1.0f : -1.0f;
         llr_out[i] = modulated * distribution(generator);
+        llr_out[i] = llr_out[i] / (4.0 * snr_linear);
     }
 }
 
@@ -163,30 +165,27 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     // Generate random binary message of length test.k
     for (int j = 0; j < k; ++j) {
         info[j] = distribution(generator); // Random binary message
-        // std::cout << info[j] << " ";
     }
 
     // Encode message
     auto enc_start = std::chrono::high_resolution_clock::now();
     entry.encode(info, cw);
     auto enc_time = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - enc_start).count();
+    for (size_t j = 0; j < cw.size(); ++j) {
+        std::cout << cw[j] << ", ";
+    }
 
     // Transmit message
     channel(cw, esno, float_llr);
-    fltvec cw_float;
-    for (size_t i = 0; i < cw.size(); i++) {
-      cw_float.push_back(float(cw[i]));
-    }
 
-    // Convert int llr format
-    // for (int j = 0; j < n; ++j) {llr[j] = entry.llr2int(float_llr[j]);}
-    
-    // std::vector<float> fixedp_llr(n);
-    // for (int j = 0; j < n; ++j) fixedp_llr[j] = entry.fixed2float(llr[j]);
+    std::cout << "float_llr: " << std::endl;
+    for (size_t i = 0; i < float_llr.size(); ++i) {
+        std::cout << float_llr[i] << ", ";
+    }
     
     // Decode message
     auto dec_start = std::chrono::high_resolution_clock::now();
-    int detect = entry.decode(cw_float, cw_est, info_est);
+    int detect = entry.decode(float_llr, cw_est, info_est);
     // int detect = entry.decode_fixedp(llr, cw_est, info_est);
     auto dec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - dec_start).count();
 

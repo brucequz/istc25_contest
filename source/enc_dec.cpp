@@ -35,7 +35,7 @@ void enc_dec::encode(bitvec &info, bitvec &cw) {
     // add crc
 	crc::crc_calculation(info, M+1, CRC);
     // Encode
-    bitvec cw_unpunctured(152);
+    bitvec cw_unpunctured;
     code.encode(info, cw_unpunctured);
     
     // std::cout << "printing unpunctured encoded word: ";
@@ -80,7 +80,7 @@ int enc_dec::decode(fltvec &llr, bitvec &cw_est, bitvec &info_est) {
 
     // std::cout << "projected_received_word size " << projected_received_word.size() << ", energy: " << post_projection_energy << std::endl;
 
-    MessageInformation mi_result = code.decode(projected_received_word, 4, PUNCTURING_INDICES, 0);
+    MessageInformation mi_result = code.decode(projected_received_word, PUNCTURING_INDICES, 0);
     
     info_est = mi_result.message;
     int result = 1;

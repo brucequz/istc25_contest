@@ -17,9 +17,13 @@ void tbcc::create_encoder(int verbose) {
 
 
 // BALD decoding
-MessageInformation tbcc::decode(fltvec &llr_in, double theta_t, intvec punctured_indices, int verbose = 0) {
+MessageInformation tbcc::decode(fltvec &llr_in, intvec punctured_indices, int verbose = 0) {
     // first decode using product metric
-    return decoder.lowRateDecoding_MaxAngle_ProductMetric(llr_in, punctured_indices);
+    if (ENCODING_RULE == 'T') {
+        return decoder.lowRateDecoding_MaxAngle_ProductMetric(llr_in, punctured_indices);
+    }
+
+    return decoder.lowRateDecoding_MaxAngle_ProductMetric_ZT(llr_in);
     // returns the correct result we get from squared distance metric
     // return decoder.decode(llr_in, punctured_indices);
 }
@@ -33,6 +37,13 @@ MessageInformation_fixedp tbcc::decode_fixedp(llrvec &llr_in, double theta_t, in
 
 // Encode info bitvec into codeword bitvec
 void tbcc::encode(intvec &info, intvec &cw) {
-    cw = trellis.encode(info);
+    if (ENCODING_RULE == 'T') {
+        cw = trellis.encode(info);
+    } else if (ENCODING_RULE == 'Z') {
+        for (int i=0; i<V; i++){
+            info.push_back(0);
+        }
+        cw = trellis.encode_zt(info);
+    }
 }
 

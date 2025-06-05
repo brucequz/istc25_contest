@@ -23,6 +23,7 @@ inline constexpr int MAX_LISTSIZE = 16384;     /* Maximum list size */
 inline constexpr double MAX_METRIC = 87.6;     /* Maximum decoding metric */
 inline constexpr double MAX_ANGLE = 3.14;    /* Maximum angle for the list decoder */
 inline constexpr char STOPPING_RULE = 'A';     /* Stopping rule: {M: metric, L: listsize, A: angle} */
+inline constexpr char ENCODING_RULE = 'T';     /* Encoding rule: {Z: zero-terminated, T: tail-biting} */
 inline constexpr char DECODING_RULE = 'P';     /* Decoding rule: {P: projected, N: non-projected}*/
 inline constexpr char ERROR_RUN_TYPE = 'U';    /* Accumulate to which type of error: {U: undetected, T: total}*/
 

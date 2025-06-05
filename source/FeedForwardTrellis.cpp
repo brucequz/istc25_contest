@@ -101,6 +101,24 @@ std::vector<int> FeedForwardTrellis::encode(std::vector<int> originalMessage){
 	return originalMessage;
 }
 
+// for zero-terminated message, start encoding at state-0
+std::vector<int> FeedForwardTrellis::encode_zt(std::vector<int> originalMessage){
+	std::vector<int> output;
+	int State = 0;
+	for (int i = 0; i < originalMessage.size(); i += k){
+		int decimal = 0;
+		for (int j = 0; j < k; j++){
+			decimal += (originalMessage[i + j] * pow(2, k - j - 1));
+		}
+		std::vector<int> outputBinary = crc::get_point(outputs[State][decimal], n);
+		State = nextStates[State][decimal];
+		for (int j = 0; j < n; j++){
+			output.push_back(outputBinary[j]);
+		}
+	}
+	return output;
+}
+
 std::vector<int> FeedForwardTrellis::dec2Bin(int decimal, int length){
 	std::vector<int> binary(length);
 	for (int j = (length - 1); j >= 0; j--) {
