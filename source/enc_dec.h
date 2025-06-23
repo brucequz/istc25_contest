@@ -1,12 +1,12 @@
-#include <vector>
 #ifndef ENC_DEC_H
 #define ENC_DEC_H
 
-// Standard header for contest submission
+#include <vector>
+#include "../fpm/fixed.hpp"
 
 // Two types: bit and llr
+typedef fpm::fixed_16_16 llr_type;
 typedef int bit_type;
-typedef int llr_type;
 using bitvec = std::vector<bit_type>;
 using llrvec = std::vector<llr_type>;
 using fltvec = std::vector<float>;

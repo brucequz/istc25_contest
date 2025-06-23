@@ -31,7 +31,10 @@ MessageInformation tbcc::decode(fltvec &llr_in, intvec punctured_indices, int ve
 // Encode info bitvec into codeword bitvec
 void tbcc::encode(intvec &info, intvec &cw) {
     if (ENCODING_RULE == 'T') {
-        cw = trellis.encode(info);
+        int crc_length = M + 1;
+        intvec info_crc = info;
+        crc::crc_calculation(info_crc, crc_length, CRC);
+        cw = trellis.encode(info_crc);
     } else if (ENCODING_RULE == 'Z') {
         intvec info_zt = info;
         for (int i=0; i<V; i++){

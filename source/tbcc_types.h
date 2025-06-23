@@ -1,7 +1,10 @@
+#include <vector>
+#include "../fpm/fixed.hpp"
+
 #ifndef MLA_TYPES_H
 #define MLA_TYPES_H
 
-#include <vector>
+
 
 struct CodeInformation {
   int k;              // numerator of the rate

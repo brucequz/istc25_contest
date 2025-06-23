@@ -32,7 +32,7 @@ test_point contest[N_TEST] =
   {128,512,0.1,2000,0},  // k=128 R=1/4
   {256,1024,0.1,2000,0}, // k=256 R=1/4
   {512,2048,0.1,2000,0}, // k=512 R=1/4
-  {64,128,1.0,2000,0},   // k=64 R=1/2
+  {64,128,3,20000,0},   // k=64 R=1/2
   {128,256,1.0,2000,0},  // k=128 R=1/2
   {256,512,1.0,2000,0},  // k=256 R=1/2
   {512,1024,1.0,2000,0}, // k=512 R=1/2
@@ -151,6 +151,9 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
   // Run tests
   for (int i = 0; i < n_block; ++i)
   {
+    if (i % 100 == 0) {
+        std::cout << "Running test " << i << " of " << n_block << std::endl;
+    }
     // Generate random binary message of length test.k
     for (int j = 0; j < k; ++j) {
         info[j] = distribution(generator); // Random binary message
@@ -161,6 +164,7 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     // Encode message
     auto enc_start = std::chrono::high_resolution_clock::now();
     entry.encode(info, cw); 
+    std::cout << "info size: " << info.size() << std::endl;
     auto enc_time = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - enc_start).count();
 
     // Transmit message
@@ -168,6 +172,13 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
 
     // Convert int llr format
     for (int j = 0; j < n; ++j) llr[j] = entry.llr2int(float_llr[j]);
+    std::cout << "Float LLR: ";
+    utils::print_double_vector(float_llr);
+    std::cout << "Float LLR size: " << float_llr.size() << std::endl;
+    std::cout << "LLR: ";
+    utils::print_fixed_vector(llr);
+    std::cout << "LLR size: " << llr.size() << std::endl;
+    break; // For debugging, remove this line to run all blocks
 
     // Decode message
     auto dec_start = std::chrono::high_resolution_clock::now();

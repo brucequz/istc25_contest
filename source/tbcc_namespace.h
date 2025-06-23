@@ -10,6 +10,8 @@
 #include <algorithm>
 
 #include "tbcc_types.h"
+#include "../fpm/ios.hpp"
+#include "enc_dec.h"
 
 namespace awgn {
 
@@ -42,6 +44,9 @@ void print_double_vector(std::vector<float> vector);
 
 // prints a vector of ints, with commas seperating elements
 void print_int_vector(std::vector<int> vector);
+
+// prints a vector of fixed_point integers, with commas seperating elements
+void print_fixed_vector(llrvec vector);
 
 // outputs a vector of ints to a file
 void output_int_vector(std::vector<int> vector, std::ofstream& file);

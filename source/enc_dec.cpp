@@ -15,9 +15,7 @@ int enc_dec::init(int k, int n, bool opt_avg_latency) {
 }
 
 llr_type enc_dec::llr2int(float float_llr) {
-    // Contestants should replace this code
-    //   This code should convert a single LLR to the integer representation used by decoder
-    return std::round((32768/25.0)*float_llr);
+    return llr_type(float_llr);
 }
 
 // Encode k info bits into n codeword bits
@@ -39,32 +37,34 @@ void enc_dec::encode(bitvec &info, bitvec &cw) {
 int enc_dec::decode(llrvec &llr, bitvec &cw_est, bitvec &info_est, float esno) {
 
     // convert llr to raw output value
-    double snr_linear = pow(10.0, esno / 10.0);
-    // for (size_t i = 0; i < llr.size) // TODO
+    // double snr_linear = pow(10.0, esno / 10.0);
     
     // unpuncture
-    fltvec unpunctured_symbols(N + PUNCTURING_INDICES.size());
-    auto llr_ptr = llr.begin();
+    llrvec unpunctured_symbols(N + PUNCTURING_INDICES.size());
+    auto llr_idx = 0;
     for (int i = 0; i < unpunctured_symbols.size(); i++) {
         if (find(PUNCTURING_INDICES.begin(), PUNCTURING_INDICES.end(), i) == PUNCTURING_INDICES.end()) {
             // this position is not punctured
-            unpunctured_symbols[i] = *llr_ptr;
-            llr_ptr++;
+            unpunctured_symbols[i] = llr[llr_idx];
+            llr_idx++;
         } else {
-            unpunctured_symbols[i] = 0.0f;
+            unpunctured_symbols[i] = llr_type(0.0); // punctured positions are set to 0
         }
     }
 
-    // projecting onto the codeword sphere
-    float received_word_energy = utils::compute_vector_energy(unpunctured_symbols);
-    float energy_normalize_factor = std::sqrt(N / received_word_energy);
-    std::vector<float> projected_received_word(unpunctured_symbols.size(), 0.0);
-    for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
-      projected_received_word[i] = unpunctured_symbols[i] * energy_normalize_factor;
-    }
+    // // projecting onto the codeword sphere
+    // float received_word_energy = utils::compute_vector_energy(unpunctured_symbols);
+    // float energy_normalize_factor = std::sqrt(N / received_word_energy);
+    // std::vector<float> projected_received_word(unpunctured_symbols.size(), 0.0);
+    // for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
+    //   projected_received_word[i] = unpunctured_symbols[i] * energy_normalize_factor;
+    // }
 
-    MessageInformation mi_result = code.decode(projected_received_word, PUNCTURING_INDICES, 0);
-    info_est = mi_result.message;
+    // std::cout << "printing projected received word: " << std::endl;
+    // utils::print_double_vector(projected_received_word);
+
+    // MessageInformation mi_result = code.decode(projected_received_word, PUNCTURING_INDICES, 0);
+    // info_est = mi_result.message;
     int result = 1;
     return result;
 }

@@ -110,6 +110,16 @@ void print_int_vector(std::vector<int> vector){
 	std::cout << vector[vector.size() - 1] << std::endl;
 }
 
+// prints a vector of fixed_point integers, with commas seperating elements
+void print_fixed_vector(llrvec vector){
+	if(vector.size() == 0)
+		return;
+	for(int i = 0; i < vector.size() - 1; i++){
+		std::cout << std::setw(5) << vector[i] << ", ";
+	}
+	std::cout << std::setw(5) << vector[vector.size() - 1] << std::endl;
+}
+
 // outputs a vector of ints to a file
 void output_int_vector(std::vector<int> vector, std::ofstream& file){
 	if(vector.size() == 0)

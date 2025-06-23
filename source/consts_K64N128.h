@@ -31,12 +31,15 @@ constexpr double MAX_ANGLE = 0.7498;    /* Maximum angle for the list decoder */
 constexpr char STOPPING_RULE = 'A';     /* Stopping rule: {M: metric, L: listsize, A: angle} */
 inline constexpr char ENCODING_RULE = 'T';     /* Encoding rule: {Z: zero-terminated, T: tail-biting} */
 constexpr char DECODING_RULE = 'P';     /* Decoding rule: {P: projected, N: non-projected}*/
-constexpr char ERROR_RUN_TYPE = 'T';    /* Accumulate to which type of error: {U: undetected, T: total}*/
 
 /* --- Simulation Parameters --- */
 constexpr int MAX_ERRORS = 20;           /* Maximum number of errors */
 constexpr bool NOISELESS = false;        /* Noiseless simulation */
 constexpr int LOGGING_ITERS = 1000;      /* Logging Interval*/
 constexpr int BASE_SEED = 42;            /* Fixed base seed for simulation */
+
+/* --- Fixed Point Math --- */
+constexpr int FIXED_POINT_FRACTIONAL_LENGTH = 10; /* Fixed point fractional length */
+constexpr int FIXED_POINT_INTEGER_LENGTH = 5; /* Fixed point integer length */
 
 #endif
