@@ -1,21 +1,34 @@
 CXX = g++
-CXXFLAGS = -Wall -O3 -std=c++17
-LDFLAGS = 
-SOURCES = enc_dec.cpp run_test.cpp ldpc.cpp test.cpp argmin.cpp
-OBJECTS = $(SOURCES:.cpp=.o)
-EXECUTABLE = run_test test
+CXXFLAGS = -std=c++17 -Wall -O3
 
-all: $(EXECUTABLE)
+# Default config (can override with `make CONFIG=K64N256`)
+CONFIG ?= K64N128
 
-run_test: enc_dec.o run_test.o ldpc.o argmin.o
-	$(CXX) $(LDFLAGS) -o $@ $^
+# Source files (excluding test.cpp)
+SRC_FILES = $(filter-out test.cpp, $(wildcard *.cpp))
+OBJS = $(SRC_FILES:.cpp=.o)
 
-test: test.o ldpc.o
-	$(CXX) $(LDFLAGS) -o $@ $^
+# Executable name
+TARGET = run_test
 
-%.o: %.cpp %.h
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+# Include paths
+INCLUDES = -I.
 
+# Default rule
+all: clean consts.h $(TARGET)
+
+# Symlink or copy the correct consts file
+consts.h:
+	cp consts_$(CONFIG).h consts.h
+
+# Compile rule
+%.o: %.cpp
+	$(CXX) $(CXXFLAGS) $(INCLUDES) -DCONFIG_$(CONFIG) -c $< -o $@
+
+# Linking
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $^
+
+# Clean
 clean:
-	rm -f $(OBJECTS) $(EXECUTABLE)
-	rm -f $(OBJECTS) $(EXECUTABLE)
+	rm -f $(OBJS) $(TARGET) consts.h

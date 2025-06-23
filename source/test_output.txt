@@ -1,0 +1,1 @@
+Test with parameters (k=64, n=80, esno=3.8, n_block=10000): Block: 10000/10000 = 1, Info Bit Errors: 320225/640000 = 2049.44, Encoding Time (ns): 32984566/10000 = 3298.46, Decoding Time (µs): 12516479/10000 = 1251.65, 

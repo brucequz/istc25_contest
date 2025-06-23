@@ -10,7 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include "enc_dec.h"
-#include "ldpc.h"
+#include "tbcc.h"
 #include "argmin.h"
 
 const int N_TEST = 12;
@@ -160,7 +160,7 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
 
     // Encode message
     auto enc_start = std::chrono::high_resolution_clock::now();
-    entry.encode(info, cw);
+    entry.encode(info, cw); 
     auto enc_time = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - enc_start).count();
 
     // Transmit message
@@ -172,7 +172,7 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     // Decode message
     auto dec_start = std::chrono::high_resolution_clock::now();
     //int detect = entry.decode(llr, cw_est, info_est);
-    entry.decode(llr, cw_est, info_est);
+    entry.decode(llr, cw_est, info_est, esno);
     auto dec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - dec_start).count();
 
     // Count number of information bit errors
