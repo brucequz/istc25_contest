@@ -1,5 +1,4 @@
 #include "FeedForwardTrellis.h"
-#include "consts.h"
 #include "tbcc_namespace.h"
 
 #include <iostream>

@@ -2,7 +2,6 @@
 #define tbcc_H
 
 #include "FeedForwardTrellis.h"
-#include "consts.h"
 #include "tbcc_types.h"
 #include "minHeap.h"
 #include "tbcc_namespace.h"
@@ -46,6 +45,7 @@ class tbcc
 
     // BALD decoding
     MessageInformation decode(fltvec &llr_in, intvec punctured_indices, int verbose);
+    Fixed_p_MessageInformation fixedp_decode(llrvec &llr_in, intvec punctured_indices);
  
     // Encode k info bits into n codeword bits
     void encode(intvec &info, intvec &cw);

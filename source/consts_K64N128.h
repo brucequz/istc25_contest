@@ -15,8 +15,6 @@ constexpr unsigned int CRC = 0x1565;    /* CRC polynomial */
 constexpr int POLY1 = 561;              /* Polynomial 1, in octal */
 constexpr int POLY2 = 753;              /* Polynomial 2, in octal */
 inline const std::vector<int> NUMERATORS = {561, 753};  /* in octal */
-constexpr int NUM_INFO_BITS = 64;       /* Number of information bits */
-constexpr int NUM_CODED_SYMBOLS = 128;  /* Number of coded symbols */
 
 const std::vector<int> PUNCTURING_INDICES 
     = {4, 10, 21, 24, 31, 37, 
@@ -32,14 +30,7 @@ constexpr char STOPPING_RULE = 'A';     /* Stopping rule: {M: metric, L: listsiz
 inline constexpr char ENCODING_RULE = 'T';     /* Encoding rule: {Z: zero-terminated, T: tail-biting} */
 constexpr char DECODING_RULE = 'P';     /* Decoding rule: {P: projected, N: non-projected}*/
 
-/* --- Simulation Parameters --- */
-constexpr int MAX_ERRORS = 20;           /* Maximum number of errors */
-constexpr bool NOISELESS = false;        /* Noiseless simulation */
-constexpr int LOGGING_ITERS = 1000;      /* Logging Interval*/
-constexpr int BASE_SEED = 42;            /* Fixed base seed for simulation */
-
 /* --- Fixed Point Math --- */
-constexpr int FIXED_POINT_FRACTIONAL_LENGTH = 10; /* Fixed point fractional length */
-constexpr int FIXED_POINT_INTEGER_LENGTH = 5; /* Fixed point integer length */
+constexpr int FIXED_POINT_FRACTIONAL_LENGTH = 15; /* Fixed point fractional length */
 
 #endif

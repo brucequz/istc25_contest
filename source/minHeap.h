@@ -2,6 +2,7 @@
 #define MIN_HEAP_H
 
 #include <vector>
+#include "enc_dec.h"
 
 struct DetourObject{
     DetourObject(): originalPathIndex(-1) {};
@@ -21,8 +22,8 @@ struct DetourObject{
 
 struct DetourObject_fixedp{
     DetourObject_fixedp(): originalPathIndex(-1) {};
-    int32_t pathMetric;
-    int32_t forwardPathMetric;
+    fixedp_type pathMetric;
+    fixedp_type forwardPathMetric;
     int detourStage;
     int startingState;
     int originalPathIndex;         //path that is being detoured from, defaults to -1 to indicate no detours
@@ -63,7 +64,7 @@ class MinHeap_fixedp{
         int parentIndex(int index);
         int rightChildIndex(int index);
         int leftChildIndex(int index);
-    };
+};
 
 
 #endif

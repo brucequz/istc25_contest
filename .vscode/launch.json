@@ -1,0 +1,18 @@
+{
+  "version": "2.0.0",
+  "configurations": [
+    {
+      "name": "C/C++: clang++ build and debug active file",
+      "type": "cppdbg",
+      "request": "launch",
+      "program": "/Users/brucequ/Documents/communication_system_lab/istc25_contest/run_test",
+      "args": ["-t", "4"],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "lldb",
+      "miDebuggerPath": "/Users/brucequ/.vscode/extensions/ms-vscode.cpptools-1.25.3-darwin-arm64/debugAdapters/lldb-mi/bin/lldb-mi"
+    }
+  ]
+}

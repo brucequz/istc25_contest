@@ -32,7 +32,7 @@ test_point contest[N_TEST] =
   {128,512,0.1,2000,0},  // k=128 R=1/4
   {256,1024,0.1,2000,0}, // k=256 R=1/4
   {512,2048,0.1,2000,0}, // k=512 R=1/4
-  {64,128,3,20000,0},   // k=64 R=1/2
+  {64,128,1,20000,0},   // k=64 R=1/2
   {128,256,1.0,2000,0},  // k=128 R=1/2
   {256,512,1.0,2000,0},  // k=256 R=1/2
   {512,1024,1.0,2000,0}, // k=512 R=1/2
@@ -157,39 +157,35 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
     // Generate random binary message of length test.k
     for (int j = 0; j < k; ++j) {
         info[j] = distribution(generator); // Random binary message
-        //std::cout << info[j] << " ";
+        // std::cout << info[j] << " ";
     }
-    //std::cout << std::endl;
+    // std::cout << std::endl;
 
     // Encode message
     auto enc_start = std::chrono::high_resolution_clock::now();
-    entry.encode(info, cw); 
-    std::cout << "info size: " << info.size() << std::endl;
+    entry.encode(info, cw);
     auto enc_time = std::chrono::duration_cast<std::chrono::nanoseconds>(std::chrono::high_resolution_clock::now() - enc_start).count();
 
     // Transmit message
     channel(cw, esno, float_llr);
 
+    // // // convert back to raw channel value
+    // for (int k = 0; k < n; ++k) float_llr[k] = float_llr[k] / (4 * esno);
+
     // Convert int llr format
     for (int j = 0; j < n; ++j) llr[j] = entry.llr2int(float_llr[j]);
-    std::cout << "Float LLR: ";
-    utils::print_double_vector(float_llr);
-    std::cout << "Float LLR size: " << float_llr.size() << std::endl;
-    std::cout << "LLR: ";
-    utils::print_fixed_vector(llr);
-    std::cout << "LLR size: " << llr.size() << std::endl;
-    break; // For debugging, remove this line to run all blocks
 
     // Decode message
     auto dec_start = std::chrono::high_resolution_clock::now();
     //int detect = entry.decode(llr, cw_est, info_est);
+    // entry.decode_floatp(float_llr, cw_est, info_est, esno);
     entry.decode(llr, cw_est, info_est, esno);
     auto dec_time = std::chrono::duration_cast<std::chrono::microseconds>(std::chrono::high_resolution_clock::now() - dec_start).count();
 
     // Count number of information bit errors
     int bit_err = 0;
     for (int j = 0; j < k; ++j) {
-        //std::cout << info_est[j] << " ";
+        // std::cout << info_est[j] << " ";
         if (info[j] != info_est[j]) {
             ++bit_err;
         }

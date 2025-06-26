@@ -58,5 +58,13 @@
     "unordered_map": "cpp",
     "variant": "cpp",
     "algorithm": "cpp"
-  }
+  },
+  "makefile.makefilePath": "/Users/brucequ/Documents/communication_system_lab/istc25_contest/makefile",
+  "makefile.launchConfigurations": [
+    {
+      "cwd": "/Users/brucequ/Documents/communication_system_lab/istc25_contest",
+      "binaryPath": "/Users/brucequ/Documents/communication_system_lab/istc25_contest/run_test",
+      "binaryArgs": ["-t", "4"]
+    }
+  ]
 }

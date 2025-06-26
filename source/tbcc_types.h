@@ -1,10 +1,9 @@
-#include <vector>
-#include "../fpm/fixed.hpp"
-
 #ifndef MLA_TYPES_H
 #define MLA_TYPES_H
 
-
+#include <vector>
+#include "../fpm/fixed.hpp"
+#include "enc_dec.h"
 
 struct CodeInformation {
   int k;              // numerator of the rate
@@ -40,6 +39,25 @@ struct MessageInformation{
 	double angle_received_decoded_rad;
 	std::vector<double> pathToTransmittedCodewordHistory;
 	std::vector<double> decodedCodewordSquaredNoiseMag;
+};
+
+struct Fixed_p_MessageInformation{
+	Fixed_p_MessageInformation() {
+		message 					= std::vector<int>();
+		path 							= std::vector<int>();
+		listSize 					= -1;
+    TBListSize        = -1;
+		listSizeExceeded 	= false;
+		metric 						= fixedp_type{-1};
+		angle_received_decoded_rad = fixedp_type{-1};
+	};
+	std::vector<int> message;
+	std::vector<int> path;
+	int listSize;
+  int TBListSize;
+	bool listSizeExceeded;
+	fixedp_type metric;
+	fixedp_type angle_received_decoded_rad;
 };
 
 #endif

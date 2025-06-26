@@ -10,7 +10,6 @@
 #include "minHeap.h"
 #include "tbcc_types.h"
 #include "tbcc_namespace.h"
-#include "consts.h"
 
 class LowRateListDecoder{
 public:
@@ -23,6 +22,10 @@ public:
 	MessageInformation lowRateDecoding_MaxAngle(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 	MessageInformation lowRateDecoding_MaxAngle_ProductMetric(std::vector<float> receivedMessage, std::vector<int> punctured_indices);
 	MessageInformation lowRateDecoding_MaxAngle_ProductMetric_ZT(std::vector<float> receivedMessage);
+
+	/* - Fixed Point - */
+	Fixed_p_MessageInformation decode(llrvec receivedMessage, intvec punctured_indices);
+	Fixed_p_MessageInformation lowRateDecoding_MaxAngle_ProductMetric_TB_fixedp(llrvec receivedMessage, intvec punctured_indices);
 
 
 private:
@@ -50,6 +53,14 @@ private:
 		bool init = false;
 	};
 
+	struct fixedp_cell {
+		int optimalFatherState = -1;
+		int suboptimalFatherState = -1;
+		fixedp_type pathMetric{3000};
+		fixedp_type suboptimalPathMetric{3000};
+		bool init = false;
+	};
+
 	std::vector<int> pathToMessage(std::vector<int>); 
   std::vector<int> pathToCodeword(std::vector<int>); 
 	std::vector<int> pathToMessage_ZT(std::vector<int> path);
@@ -57,6 +68,9 @@ private:
 	/* - Floating Point - */
 	std::vector<std::vector<cell>> constructLowRateTrellis(std::vector<float> receivedMessage);
 	std::vector<std::vector<cell>> constructLowRateTrellis_ZT(std::vector<float> receivedMessage);
+
+	/* - Fixed Point - */
+	std::vector<std::vector<fixedp_cell>> constructLowRateTrellis_Punctured_ProductMetric_fixedp(llrvec receivedMessage, intvec punctured_indices);
 
 	// Punctured
   std::vector<std::vector<cell>> constructLowRateTrellis_Punctured(std::vector<float> receivedMessage, std::vector<int> punctured_indices);

@@ -25,6 +25,13 @@ MessageInformation tbcc::decode(fltvec &llr_in, intvec punctured_indices, int ve
     // returns the correct result we get from squared distance metric
     // return decoder.decode(llr_in, punctured_indices);
 }
+
+Fixed_p_MessageInformation tbcc::fixedp_decode(llrvec &llr_in, intvec punctured_indices) {
+    // maximum angle decoding
+    if (ENCODING_RULE == 'T' && DECODING_RULE == 'P' && STOPPING_RULE == 'A') {
+        return decoder.lowRateDecoding_MaxAngle_ProductMetric_TB_fixedp(llr_in, punctured_indices);
+    }
+}
     
 
 
@@ -42,4 +49,6 @@ void tbcc::encode(intvec &info, intvec &cw) {
         }
         cw = trellis.encode_zt(info_zt);
     }
+    // convert (1,-1) back to (0,1)
+    for (size_t i = 0; i < cw.size(); i++) {cw[i]=(1-cw[i])/2;}
 }
