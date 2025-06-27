@@ -122,7 +122,7 @@ void print_fixed_vector(llrvec vector){
 void output_int_vector(std::vector<int> vector, std::ofstream& file){
 	if(vector.size() == 0)
 		return;
-	for(int i = 0; i < vector.size() - 1; i++){
+	for(size_t i = 0; i < vector.size() - 1; i++){
 		file << vector[i] << ", ";
 	}
 	file << vector[vector.size() - 1] << std::endl;
@@ -131,7 +131,7 @@ void output_int_vector(std::vector<int> vector, std::ofstream& file){
 float compute_vector_energy(std::vector<float> vector){
 	if (vector.size() == 0) std::cerr << "EMPTY VECTOR!" << std::endl;
 	float sum_of_squares = 0.0;
-	for (int i = 0; i < vector.size(); i++) {
+	for (size_t i = 0; i < vector.size(); i++) {
 		sum_of_squares += vector[i] * vector[i];
 	}
 	return sum_of_squares;

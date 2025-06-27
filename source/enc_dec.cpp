@@ -25,7 +25,7 @@ void enc_dec::encode(bitvec &info, bitvec &cw) {
     code.encode(info, cw_unpunctured);
     // puncturing
     bitvec cw_punctured = {};
-    for (int i = 0; i < cw_unpunctured.size(); i++) {
+    for (size_t i = 0; i < cw_unpunctured.size(); i++) {
         if (std::find(PUNCTURING_INDICES.begin(), PUNCTURING_INDICES.end(), i) == PUNCTURING_INDICES.end()) {
             cw_punctured.push_back(cw_unpunctured[i]);
         }

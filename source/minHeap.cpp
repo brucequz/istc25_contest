@@ -5,8 +5,8 @@ MinHeap::MinHeap() {
 }
 
 int MinHeap::parentIndex(int index) { return (index - 1) / 2; }
-int MinHeap::leftChildIndex(int index) { return (2 * index + 1); }
-int MinHeap::rightChildIndex(int index) { return (2 * index + 2); }
+unsigned int MinHeap::leftChildIndex(int index) { return (2 * index + 1); }
+unsigned int MinHeap::rightChildIndex(int index) { return (2 * index + 2); }
 
 void MinHeap::insert(DetourObject detour) {
   detourList.push_back(detour);

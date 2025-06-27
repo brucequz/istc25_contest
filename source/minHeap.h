@@ -47,8 +47,8 @@ private:
     std::vector<DetourObject> detourList;
     void reHeap(int index);
     int parentIndex(int index);
-    int rightChildIndex(int index);
-    int leftChildIndex(int index);
+    unsigned int rightChildIndex(int index);
+    unsigned int leftChildIndex(int index);
 };
 
 class MinHeap_fixedp{
