@@ -8,6 +8,7 @@
 #include <random>
 #include <stdexcept>
 #include <algorithm>
+#include <iomanip>
 
 #include "tbcc_types.h"
 #include "../fpm/ios.hpp"

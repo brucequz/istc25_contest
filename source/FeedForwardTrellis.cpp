@@ -12,7 +12,7 @@ FeedForwardTrellis::FeedForwardTrellis(int k, int n, int v, std::vector<int> num
 	this->k = k;
 	this->n = n;
 	this->v = v;
-	for (int i = 0; i < numerators.size(); i++){
+	for (size_t i = 0; i < numerators.size(); i++){
 		this->numerators.push_back(numerators[i]);
 	}
 	this->numInputSymbols = pow(2.0, k);
@@ -82,7 +82,7 @@ std::vector<int> FeedForwardTrellis::encode(std::vector<int> originalMessage){
 	for (int m = 0; m < numStates; m++){
 		std::vector<int> output;
 		int State = m;
-		for (int i = 0; i < originalMessage.size(); i += k){
+		for (size_t i = 0; i < originalMessage.size(); i += k){
 			int decimal = 0;
 			for (int j = 0; j < k; j++){
 				decimal += (originalMessage[i + j] * pow(2, k - j - 1));
@@ -104,7 +104,7 @@ std::vector<int> FeedForwardTrellis::encode(std::vector<int> originalMessage){
 std::vector<int> FeedForwardTrellis::encode_zt(std::vector<int> originalMessage){
 	std::vector<int> output;
 	int State = 0;
-	for (int i = 0; i < originalMessage.size(); i += k){
+	for (size_t i = 0; i < originalMessage.size(); i += k){
 		int decimal = 0;
 		for (int j = 0; j < k; j++){
 			decimal += (originalMessage[i + j] * pow(2, k - j - 1));

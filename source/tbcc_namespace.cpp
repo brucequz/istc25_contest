@@ -1,5 +1,3 @@
-#include <algorithm>
-
 #include "tbcc_namespace.h"
 
 namespace awgn {
@@ -13,7 +11,7 @@ std::vector<float> addNoise(std::vector<int> encodedMsg, float SNR) {
   float sigma = sqrt(variance);
   std::normal_distribution<float> distribution(0.0, sigma);
 
-  for (int i = 0; i < encodedMsg.size(); i++) {
+  for (size_t i = 0; i < encodedMsg.size(); i++) {
     noisyMsg.push_back(encodedMsg[i] + distribution(generator));
   }
   return noisyMsg;
@@ -94,7 +92,7 @@ namespace utils {
 void print_double_vector(std::vector<float> vector){
 	if(vector.size() == 0)
 		return;
-	for(int i = 0; i < vector.size() - 1; i++){
+	for(size_t i = 0; i < vector.size() - 1; i++){
 		std::cout << vector[i] << ", ";
 	}
 	std::cout << vector[vector.size() - 1] << std::endl;
@@ -104,7 +102,7 @@ void print_double_vector(std::vector<float> vector){
 void print_int_vector(std::vector<int> vector){
 	if(vector.size() == 0)
 		return;
-	for(int i = 0; i < vector.size() - 1; i++){
+	for(size_t i = 0; i < vector.size() - 1; i++){
 		std::cout << vector[i] << ", ";
 	}
 	std::cout << vector[vector.size() - 1] << std::endl;
@@ -114,7 +112,7 @@ void print_int_vector(std::vector<int> vector){
 void print_fixed_vector(llrvec vector){
 	if(vector.size() == 0)
 		return;
-	for(int i = 0; i < vector.size() - 1; i++){
+	for(size_t i = 0; i < vector.size() - 1; i++){
 		std::cout << std::setw(5) << vector[i] << ", ";
 	}
 	std::cout << std::setw(5) << vector[vector.size() - 1] << std::endl;

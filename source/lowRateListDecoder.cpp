@@ -694,7 +694,7 @@ std::vector<std::vector<LowRateListDecoder::cell>> LowRateListDecoder::construct
 // converts a path through the tb trellis to the binary message it corresponds with
 std::vector<int> LowRateListDecoder::pathToMessage(std::vector<int> path){
 	std::vector<int> message;
-	for(int pathIndex = 0; pathIndex < path.size() - 1; pathIndex++){
+	for(size_t pathIndex = 0; pathIndex < path.size() - 1; pathIndex++){
 		for(int forwardPath = 0; forwardPath < numForwardPaths; forwardPath++){
 			if(lowrate_nextStates[path[pathIndex]][forwardPath] == path[pathIndex + 1])
 				message.push_back(forwardPath);
@@ -707,7 +707,7 @@ std::vector<int> LowRateListDecoder::pathToMessage(std::vector<int> path){
 // currently does NOT puncture the codeword
 std::vector<int> LowRateListDecoder::pathToCodeword(std::vector<int> path){
 	std::vector<int> nopunc_codeword;
-	for(int pathIndex = 0; pathIndex < path.size() - 1; pathIndex++){
+	for(size_t pathIndex = 0; pathIndex < path.size() - 1; pathIndex++){
 		for(int forwardPath = 0; forwardPath < numForwardPaths; forwardPath++){
 			if(lowrate_nextStates[path[pathIndex]][forwardPath] == path[pathIndex + 1]){
 				std::vector<int> output_bin;

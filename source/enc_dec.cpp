@@ -45,7 +45,7 @@ int enc_dec::decode(llrvec &llr, bitvec &cw_est, bitvec &info_est, float esno) {
     // unpuncture and convert llr to raw output value
     llrvec unpunctured_symbols(N + PUNCTURING_INDICES.size());
     auto llr_idx = 0;
-    for (int i = 0; i < unpunctured_symbols.size(); i++) {
+    for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
         if (find(PUNCTURING_INDICES.begin(), PUNCTURING_INDICES.end(), i) == PUNCTURING_INDICES.end()) {
             // this position is not punctured
             unpunctured_symbols[i] = llr[llr_idx] / (4 * esno_linear);
@@ -90,7 +90,7 @@ int enc_dec::decode_floatp(fltvec &llr_flt, bitvec &cw_est, bitvec &info_est, fl
     // unpuncture
     fltvec unpunctured_symbols(N + PUNCTURING_INDICES.size());
     auto llr_idx = llr_flt.begin();
-    for (int i = 0; i < unpunctured_symbols.size(); i++) {
+    for (size_t i = 0; i < unpunctured_symbols.size(); i++) {
         if (find(PUNCTURING_INDICES.begin(), PUNCTURING_INDICES.end(), i) == PUNCTURING_INDICES.end()) {
             // this position is not punctured
             unpunctured_symbols[i] = *llr_idx;
