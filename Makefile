@@ -2,7 +2,7 @@ CXX = g++
 CXXFLAGS = -std=c++17 -Wall -O3
 
 # Default config (can override with `make CONFIG=K64N256`)
-CONFIG ?= K64N128
+CONFIG ?= K64N80
 
 # Source files (excluding test.cpp)
 SRC_DIR = source
@@ -32,4 +32,4 @@ $(TARGET): $(OBJS)
 
 # Clean
 clean:
-	rm -f $(SRC_DIR)/$(OBJS) $(SRC_DIR)/$(TARGET) $(SRC_DIR)/consts.h
+	rm -f $(OBJS) $(SRC_DIR)/$(TARGET) $(SRC_DIR)/consts.h

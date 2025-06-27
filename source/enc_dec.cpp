@@ -35,6 +35,9 @@ void enc_dec::encode(bitvec &info, bitvec &cw) {
 
 // Decode n llrs into n codeword bits and k info bits, return -1 if detected error
 int enc_dec::decode(llrvec &llr, bitvec &cw_est, bitvec &info_est, float esno) {
+    assert(llr.size() == N);
+    // std::cout << "printing puncturing patter" << std::endl;
+    // utils::print_int_vector(PUNCTURING_INDICES);
 
     // convert llr to raw output value
     fixedp_type esno_linear{esno};

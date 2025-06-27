@@ -31,6 +31,7 @@ Fixed_p_MessageInformation tbcc::fixedp_decode(llrvec &llr_in, intvec punctured_
     if (ENCODING_RULE == 'T' && DECODING_RULE == 'P' && STOPPING_RULE == 'A') {
         return decoder.lowRateDecoding_MaxAngle_ProductMetric_TB_fixedp(llr_in, punctured_indices);
     }
+    return decoder.lowRateDecoding_MaxAngle_ProductMetric_ZT_fixedp(llr_in);
 }
     
 
@@ -43,11 +44,13 @@ void tbcc::encode(intvec &info, intvec &cw) {
         crc::crc_calculation(info_crc, crc_length, CRC);
         cw = trellis.encode(info_crc);
     } else if (ENCODING_RULE == 'Z') {
-        intvec info_zt = info;
+        int crc_length = M + 1;
+        intvec info_crc = info;
+        crc::crc_calculation(info_crc, crc_length, CRC);
         for (int i=0; i<V; i++){
-            info_zt.push_back(0);
+            info_crc.push_back(0);
         }
-        cw = trellis.encode_zt(info_zt);
+        cw = trellis.encode_zt(info_crc);
     }
     // convert (1,-1) back to (0,1)
     for (size_t i = 0; i < cw.size(); i++) {cw[i]=(1-cw[i])/2;}

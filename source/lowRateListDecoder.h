@@ -26,6 +26,7 @@ public:
 	/* - Fixed Point - */
 	Fixed_p_MessageInformation decode(llrvec receivedMessage, intvec punctured_indices);
 	Fixed_p_MessageInformation lowRateDecoding_MaxAngle_ProductMetric_TB_fixedp(llrvec receivedMessage, intvec punctured_indices);
+	Fixed_p_MessageInformation lowRateDecoding_MaxAngle_ProductMetric_ZT_fixedp(llrvec receivedMessage);
 
 
 private:
@@ -71,6 +72,7 @@ private:
 
 	/* - Fixed Point - */
 	std::vector<std::vector<fixedp_cell>> constructLowRateTrellis_Punctured_ProductMetric_fixedp(llrvec receivedMessage, intvec punctured_indices);
+	std::vector<std::vector<fixedp_cell>> constructLowRateTrellis_ZT_fixedp(llrvec receivedMessage);
 
 	// Punctured
   std::vector<std::vector<cell>> constructLowRateTrellis_Punctured(std::vector<float> receivedMessage, std::vector<int> punctured_indices);

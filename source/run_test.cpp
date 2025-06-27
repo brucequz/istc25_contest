@@ -28,15 +28,15 @@ struct test_point
 // Define set of tests
 test_point contest[N_TEST] =
 {
-  {64,256,0.363,20000,0},   // k=64 R=1/4
+  {64,256,0.363,20000,0},   // k=64 R=1/4, TBCC
   {128,512,0.1,2000,0},  // k=128 R=1/4
   {256,1024,0.1,2000,0}, // k=256 R=1/4
   {512,2048,0.1,2000,0}, // k=512 R=1/4
-  {64,128,1,20000,0},   // k=64 R=1/2
+  {64,128,1,20000,0},   // k=64 R=1/2, TBCC
   {128,256,1.0,2000,0},  // k=128 R=1/2
   {256,512,1.0,2000,0},  // k=256 R=1/2
   {512,1024,1.0,2000,0}, // k=512 R=1/2
-  {64,80,3.0,2000,0},    // k=64 R=4/5
+  {64,80,2.39,20000,0},    // k=64 R=4/5, ZTCC
   {128,160,3.0,2000,0},  // k=128 R=4/5
   {256,320,3.0,2000,0},  // k=256 R=4/5
   {512,640,3.0,2000,0}   // k=512 R=4/5
@@ -168,9 +168,6 @@ void run_test(int k, int n, float esno, int n_block, int opt_avg, decoder_stats 
 
     // Transmit message
     channel(cw, esno, float_llr);
-
-    // // // convert back to raw channel value
-    // for (int k = 0; k < n; ++k) float_llr[k] = float_llr[k] / (4 * esno);
 
     // Convert int llr format
     for (int j = 0; j < n; ++j) llr[j] = entry.llr2int(float_llr[j]);
