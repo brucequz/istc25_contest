@@ -1,30 +1,36 @@
 /* K64N128 PARAMETERS */
-#ifndef K64N80_PARAM
-#define K64N80_PARAM
+#ifndef K64N128_PARAM
+#define K64N128_PARAM
 
 #include <vector>
 
 /* --- Convolutional Code Parameters --- */
-inline constexpr int k = 1;                    /* Number of input bits */
-inline constexpr int n = 1;                    /* Number of output bits */
-inline constexpr int K = 64;                   /* Number of input bits */
-inline constexpr int N = 80;                   /* Number of output bits */
-inline constexpr int V = 8;                    /* Number of memory elements */
-inline constexpr int M = 8;                    /* Degree of CRC - 1 */
-inline constexpr unsigned int CRC = 0x18B;     /* CRC polynomial */
-inline const std::vector<int> NUMERATORS = {205};  /* in octal */
+constexpr int k = 1;                    /* Number of input bits */
+constexpr int n = 2;                    /* Number of output bits */
+constexpr int K = 64;                   /* Number of input bits */
+constexpr int N = 128;                  /* Number of output bits */
+constexpr int V = 8;                    /* Number of memory elements */
+constexpr int M = 12;                   /* Degree of CRC - 1 */
+constexpr unsigned int CRC = 0x1565;    /* CRC polynomial */
+constexpr int POLY1 = 561;              /* Polynomial 1, in octal */
+constexpr int POLY2 = 753;              /* Polynomial 2, in octal */
+inline const std::vector<int> NUMERATORS = {561, 753};  /* in octal */
 
-inline const std::vector<int> PUNCTURING_INDICES = {};
+const std::vector<int> PUNCTURING_INDICES 
+    = {4, 10, 21, 24, 31, 37, 
+       42, 48, 59, 62, 69, 75, 
+       80, 86, 97, 100, 107, 113, 
+       118, 124, 135, 138, 145, 151};   /* 2023 ISTC paper puncturing pattern */
 
 /* --- List Decoder Parameters --- */
-inline constexpr int MAX_LISTSIZE = 1e7;       /* Maximum list size */
-inline constexpr double MAX_METRIC = 87.6;     /* Maximum decoding metric */
-inline constexpr double MAX_ANGLE = 0.7498;    /* Maximum angle for the list decoder */
-inline constexpr char ENCODING_RULE = 'Z';     /* Select code type: {Z: zero-terminated CC, T: tail-biting CC} */
-inline constexpr char DECODING_RULE = 'N';     /* Decoding rule: {P: projected, N: non-projected}*/
-inline constexpr char STOPPING_RULE = 'A';     /* Stopping rule: {M: metric, L: listsize, A: angle} */
+constexpr int MAX_LISTSIZE = 1e7;       /* Maximum list size */
+constexpr double MAX_METRIC = 87.6;     /* Maximum decoding metric */
+constexpr double MAX_ANGLE = 0.7498;    /* Maximum angle for the list decoder */
+constexpr char STOPPING_RULE = 'A';     /* Stopping rule: {M: metric, L: listsize, A: angle} */
+inline constexpr char ENCODING_RULE = 'T';     /* Encoding rule: {Z: zero-terminated, T: tail-biting} */
+constexpr char DECODING_RULE = 'P';     /* Decoding rule: {P: projected, N: non-projected}*/
 
 /* --- Fixed Point Math --- */
-constexpr int FIXED_POINT_FRACTIONAL_LENGTH = 12; /* Fixed point fractional length */
+constexpr int FIXED_POINT_FRACTIONAL_LENGTH = 15; /* Fixed point fractional length */
 
 #endif
